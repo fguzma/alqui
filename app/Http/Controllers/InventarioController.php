@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Alquiler\Http\Requests;
+use App\Http\Requests;
 use App\Http\Requests\ArticuloAdd;
 use App\Http\Requests\ArticuloUpdate;
 use App\Inventario;

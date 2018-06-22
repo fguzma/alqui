@@ -54,6 +54,21 @@ return [
             'engine' => null,
         ],
 
+        'mysql1' => [
+            'driver' => 'mysql',
+            'host' => env('DB_HOST', 'us-cdbr-iron-east-04.cleardb.net'),
+//            'port' => env('DB_PORT', '3306'),
+            'database' => env('DB_DATABASE', 'heroku_bd1aa85144b344e'),
+            'username' => env('DB_USERNAME', 'be87be3313400e'),
+            'password' => env('DB_PASSWORD', '9f886225'),
+//            'unix_socket' => env('DB_SOCKET', ''),
+            'charset' => 'utf8mb4',
+            'collation' => 'utf8mb4_unicode_ci',
+            'prefix' => '',
+            'strict' => true,
+            'engine' => null,
+        ],
+
         'pgsql' => [
             'driver' => 'pgsql',
             'host' => env('DB_HOST', '127.0.0.1'),
@@ -76,21 +91,6 @@ return [
             'password' => env('DB_PASSWORD', ''),
             'charset' => 'utf8',
             'prefix' => '',
-        ],
-
-        'mysql1' => [
-            'driver' => 'mysql',
-            'host' => env('DB_HOST', 'us-cdbr-iron-east-04.cleardb.net'),
-//            'port' => env('DB_PORT', '3306'),
-            'database' => env('DB_DATABASE', 'heroku_bd1aa85144b344e'),
-            'username' => env('DB_USERNAME', 'be87be3313400e'),
-            'password' => env('DB_PASSWORD', '9f886225'),
-//            'unix_socket' => env('DB_SOCKET', ''),
-            'charset' => 'utf8mb4',
-            'collation' => 'utf8mb4_unicode_ci',
-            'prefix' => '',
-            'strict' => true,
-            'engine' => null,
         ],
 
     ],
