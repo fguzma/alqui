@@ -1,0 +1,183 @@
+[
+{
+	"id": 1,
+	"name": "Alquileres de Sillas",
+	"slug": "alquileresSillas",
+	"images": [
+		{
+			"id": 1,
+			"description": "Principal y Galeria",
+			"url": "https://res.cloudinary.com/fguzman/image/upload/c_scale,h_697,w_800/v1523232712/Alquileres-Santana/1/Sillas.jpg"
+		},
+		{
+			"id": 2,
+			"description": "Modal 1",
+			"url": "//res.cloudinary.com/fguzman/image/upload/c_scale,h_697,w_800/v1523232712/Alquileres-Santana/1/Sillas.jpg"
+		},
+		{
+			"id": 3,
+			"description": "Modal 1-2",
+			"url": "//res.cloudinary.com/fguzman/image/upload/c_scale,h_697,w_800/v1523232713/Alquileres-Santana/1/sillas2.jpg"
+		}
+	]
+},
+{
+	"id": 2,
+	"name": "Organizacion de Eventos",
+	"slug": "organizacionEventos",
+	"images": [
+		{
+			"id": 1,
+			"description": "Principal y Galeria",
+			"url": "//res.cloudinary.com/fguzman/image/upload/c_scale,h_697,w_800/v1523232734/Alquileres-Santana/2/arreglo.jpg"
+		},
+		{
+			"id": 2,
+			"description": "Modal 2",
+			"url": "//res.cloudinary.com/fguzman/image/upload/c_scale,h_697,w_800/v1523232734/Alquileres-Santana/2/arreglo.jpg"
+		},
+		{
+			"id": 3,
+			"description": "Modal 2-2",
+			"url": "//res.cloudinary.com/fguzman/image/upload/c_scale,h_697,w_800/v1523232732/Alquileres-Santana/2/dos.jpg"
+		}
+	]
+},
+{
+	"id": 3,
+	"name": "Alquileres de Mesa",
+  	"slug": "alquileresMesas",
+	"images": [
+		{
+			"id": 1,
+			"description": "Principal y Galeria",
+			"url": "//res.cloudinary.com/fguzman/image/upload/c_scale,h_697,w_800/v1523232742/Alquileres-Santana/3/Mesa.jpg"
+		},
+		{
+			"id": 2,
+			"description": "Modal 3",
+			"url": "//res.cloudinary.com/fguzman/image/upload/c_scale,h_697,w_800/v1523232742/Alquileres-Santana/3/Mesa.jpg"
+		},
+		{
+			"id": 3,
+			"description": "Modal 3-2",
+			"url": "//res.cloudinary.com/fguzman/image/upload/c_scale,h_697,w_800/v1523232744/Alquileres-Santana/3/mesa_boni.jpg"
+		},
+		{
+			"id": 4,
+			"description": "Modal 3-3",
+			"url": "//res.cloudinary.com/fguzman/image/upload/c_scale,h_697,w_800/v1523232743/Alquileres-Santana/3/Mesa3.jpg"
+		}
+	]
+},
+{
+	"id": 4,
+	"name": "Decoracion",
+	"slug": "decoracion",
+	"images": [
+		{
+			"id": 1,
+			"description": "Principal y Galeria",
+			"url": "//res.cloudinary.com/fguzman/image/upload/c_scale,h_697,w_800/v1523232753/Alquileres-Santana/4/arreglo3.jpg"
+		},
+		{
+			"id": 2,
+			"description": "Modal 4",
+			"url": "//res.cloudinary.com/fguzman/image/upload/c_scale,h_697,w_800/v1523232753/Alquileres-Santana/4/arreglo3.jpg"
+		}
+	]
+},
+{
+	"id": 5,
+	"name": "Organizacion de Cumpleaños",
+	"slug": "organizacionCumpleanhos",
+	"images": [
+		{
+			"id": 1,
+			"description": "Principal y Galeria",
+			"url": "//res.cloudinary.com/fguzman/image/upload/c_scale,h_697,w_800/v1523232762/Alquileres-Santana/5/Deco5.jpg"
+		},
+		{
+			"id": 2,
+			"description": "Modal 5",
+			"url": "//res.cloudinary.com/fguzman/image/upload/c_scale,h_697,w_800/v1523232762/Alquileres-Santana/5/Deco5.jpg"
+		},
+		{
+			"id": 3,
+			"description": "Modal 5-2",
+			"url": "//res.cloudinary.com/fguzman/image/upload/c_scale,h_697,w_800/v1523232762/Alquileres-Santana/5/Deco6.jpg"
+		}
+	]
+},
+{
+	"id": 6,
+	"name": "Organizacion de Quinceaños",
+	"slug": "organizacionQuinceanhos",
+	"images": [
+		{
+			"id": 1,
+			"description": "Principal",
+			"url": "//res.cloudinary.com/fguzman/image/upload/c_scale,h_697,w_800/v1523232772/Alquileres-Santana/6/XV.jpg"
+		},
+		{
+			"id": 2,
+			"description": "Modal 6",
+			"url": "//res.cloudinary.com/fguzman/image/upload/c_scale,h_697,w_800/v1523232772/Alquileres-Santana/6/XV.jpg"
+		},
+		{
+			"id": 3,
+			"description": "Modal 6-2",
+			"url": "//res.cloudinary.com/fguzman/image/upload/c_scale,h_697,w_800/v1523232772/Alquileres-Santana/6/XV2.jpg"
+		},
+		{
+			"id": 4,
+			"description": "Modal 6-3",
+			"url": "//res.cloudinary.com/fguzman/image/upload/c_scale,h_697,w_800/v1523232772/Alquileres-Santana/6/XV3.jpg"
+		}
+	]
+},
+{
+	"id": 7,
+	"name": "Buffet",
+	"slug": "buffet",
+	"images": [
+		{
+			"id": 1,
+			"description": "Principal y Galeria",
+			"url": "//res.cloudinary.com/fguzman/image/upload/c_scale,h_697,w_800/v1523232780/Alquileres-Santana/7/Buffet4.jpg"
+		},
+		{
+			"id": 2,
+			"description": "Modal 7",
+			"url": "//res.cloudinary.com/fguzman/image/upload/c_scale,h_697,w_800/v1523232780/Alquileres-Santana/7/Buffet4.jpg"
+		},
+		{
+			"id": 3,
+			"description": "Modal 7-2",
+			"url": "//res.cloudinary.com/fguzman/image/upload/c_scale,h_697,w_800/v1523232781/Alquileres-Santana/7/Clienta.jpg"
+		}
+	]
+},
+{
+	"id": 8,
+	"name": "Alquileres de Utensilios",
+	"slug": "alquilerUtensilios",
+	"images": [
+		{
+			"id": 1,
+			"description": "Principal y Galeria",
+			"url": "//res.cloudinary.com/fguzman/image/upload/c_scale,h_697,w_800/v1523232789/Alquileres-Santana/8/Buffet.jpg"
+		},
+		{
+			"id": 2,
+			"description": "Modal 8",
+			"url": "//res.cloudinary.com/fguzman/image/upload/c_scale,h_697,w_800/v1523232789/Alquileres-Santana/8/Buffet.jpg"
+		},
+		{
+			"id": 3,
+			"description": "Modal 8-2",
+			"url": "//res.cloudinary.com/fguzman/image/upload/c_scale,h_697,w_800/v1523232788/Alquileres-Santana/8/Buffet3.jpg"
+		}
+	]
+}
+]

@@ -1,0 +1,143 @@
+#main
+    //video header and navigation divs.
+    .video-container#header
+        video(autoplay=true, height="720", loop=true, poster="img/wine.jpg", width="1280")
+            source(src="video/mp4/wine.mp4" type="video/mp4")
+            source(src="video/webm/wine.webm" type="video/webm")
+    .container-fluid.no-padding.no-margin.relative.h-100#home
+        nav.fixed.top.right.navigation.white-text.row.full-width.up#navigation
+            .col-12
+                ul.list-inline.float-right.row
+                    li.list-inline-item.col-12.col-md-1.col-lg-1.nav-icon
+                        a.icon#button
+                            font-awesome-icon#menu-icon(:icon="['fas', 'bars']")
+                    li.list-inline-item.col-12.col-md-2.col-lg-2
+                        a(href="#header") Inicio
+                    li.list-inline-item.col-12.col-md-2.col-lg-2
+                        a(href="#menu") Servicios
+                    li.list-inline-item.col-12.col-md-2.col-lg-2
+                        a(href="#gallery") Galeria
+                    li.list-inline-item.col-12.col-md-2.col-lg-2
+                        a(href="#contact-form") Contacto
+                    li.list-inline-item.col-12.col-md-3.col-lg-3
+                        a(href="#location") Como llegar
+        .row.no-padding.h-100
+            .white-text.col-12.h-100.no-padding.text-center#parent
+                .h-100#child
+                    img(src="img/logo.png" width="200")
+                    h1.satisfy.title.no-margin Alquileres Santana
+                    p#is-open
+                        i.fa.fa-clock-o Abierto Ahora
+        // Barra de navegacion sticky
+        .black.large-padding.white-text.full-width.absolute.up#description
+            .row
+                #description-text.col-6.white-text.medium.mx-auto.pt-2.text-center Alquileres Santana
+                .col-6.hidden#sticky-navigation
+                    nav.text-right.navigation.row
+                        ul.list-inline.row
+                            li.list-inline-item.col-12.col-md-1.col-lg-1.nav-icon
+                                a.responsive-button.icon#button-2
+                                    font-awesome-icon(:icon="['fas', 'bars']")
+                            li.list-inline-item.col-12.col-md-2.col-lg-2
+                                a(href="#header") Inicio
+                            li.list-inline-item.col-12.col-md-2.col-lg-2
+                                a(href="#menu") Servicios
+                            li.list-inline-item.col-12.col-md-2.col-lg-2
+                                a(href="#gallery") Galeria
+                            li.list-inline-item.col-12.col-md-2.col-lg-2
+                                a(href="#contact-form") Contacto
+                            li.list-inline-item.col-12.col-md-3.col-lg-3
+                                a(href="#location") Como llegar
+    // Breve descripcion de los servicios de la empresa
+    .text-center.relative#menu
+        .absolute#menu-title
+            h2.white-text.newblack.satisfy.title#service  Servicios
+        .row
+            .col-12.col-md-3.col-lg-3.services(v-for="media in Media" :key="media.id" v-bind:style="{'background-image': 'url(' + media.images[0].url + ')' }")
+                .screen
+                    .row.full-height.t-div
+                        .col-12.white-text.t-child
+                            h3.satisfy.subtitle(v-bind:id="media.slug") {{ media.name }}
+    b-modal#modal1(href="modal1")
+        b-carousel(controls=true, background="#ababab", :interval="1500", v-model="slide", @sliding-start="onSlideStart", @sliding-end="onSlideEnd", img-width="400", img-height="480")
+            b-carousel-slide(img-src="https://res.cloudinary.com/fguzman/image/upload/c_scale,h_697,w_800/v1523232712/Alquileres-Santana/1/Sillas.jpg")
+            b-carousel-slide(img-src="https://res.cloudinary.com/fguzman/image/upload/c_scale,h_697,w_800/v1523232712/Alquileres-Santana/1/Sillas.jpg")
+    b-modal#modal2(href="modal2")
+        b-carousel#gallery-service-2(controls=true, background="#ababab", :interval="2000", v-model="slide", @sliding-start="onSlideStart", @sliding-end="onSlideEnd", img-width="1024", img-height="480")
+            b-carousel-slide(img-src="https://res.cloudinary.com/fguzman/image/upload/c_scale,h_697,w_800/v1523232712/Alquileres-Santana/1/Sillas.jpg")
+            b-carousel-slide(img-src="https://res.cloudinary.com/fguzman/image/upload/c_scale,h_697,w_800/v1523232713/Alquileres-Santana/1/sillas2.jpg")
+    b-modal#modal3(href="modal3")
+        b-carousel#gallery-service-3(controls=true, background="#ababab", :interval="2000", v-model="slide", @sliding-start="onSlideStart", @sliding-end="onSlideEnd", img-width="1024", img-height="480")
+            b-carousel-slide(img-src="static/img/3/Mesa.jpg")
+            b-carousel-slide(img-src="static/img/3/Mesa3.jpg")
+            b-carousel-slide(img-src="static/img/3/mesa_boni.jpg")
+    b-modal#modal4(href="modal4")
+        b-carousel#gallery-service-4(controls=true, background="#ababab", :interval="2000", v-model="slide", @sliding-start="onSlideStart", @sliding-end="onSlideEnd", img-width="1024", img-height="480")
+            b-carousel-slide(img-src="static/img/4/arreglo3.jpg")
+    b-modal#modal5(href="modal5")
+        b-carousel#gallery-service-5(controls=true, background="#ababab", :interval="2000", v-model="slide", @sliding-start="onSlideStart", @sliding-end="onSlideEnd", img-width="1024", img-height="480")
+            b-carousel-slide(img-src="static/img/5/Deco6.jpg")
+            b-carousel-slide(img-src="static/img/5/Deco5.jpg")
+    b-modal#modal6(href="modal6")
+        b-carousel#gallery-service-6(controls=true, background="#ababab", :interval="2000", v-model="slide", @sliding-start="onSlideStart", @sliding-end="onSlideEnd", img-width="1024", img-height="480")
+            b-carousel-slide(img-src="static/img/6/XV3.jpg")
+            b-carousel-slide(img-src="static/img/6/XV2.jpg")
+            b-carousel-slide(img-src="static/img/6/XV.jpg")
+    b-modal#modal7(href="modal7")
+        b-carousel#gallery-service-7(controls=true, background="#ababab", :interval="2000", v-model="slide", @sliding-start="onSlideStart", @sliding-end="onSlideEnd", img-width="1024", img-height="480")
+            b-carousel-slide(img-src="static/img/7/Buffet4.jpg")
+            b-carousel-slide(img-src="static/img/7/Clienta.jpg")
+    b-modal#modal8(href="modal8")
+        b-carousel#gallery-service-8(controls=true, background="#ababab", :interval="2000", v-model="slide", @sliding-start="onSlideStart", @sliding-end="onSlideEnd", img-width="1024", img-height="480")
+            b-carousel-slide(img-src="static/img/8/Buffet3.jpg")
+            b-carousel-slide(img-src="static/img/8/Buffet.jpg")
+    // Slide for show a preview of services.
+    #gallery
+        b-carousel#gallery-carousel( controls=true, background="#ababab", :interval="1500", sv-model="slide", @sliding-start="onSlideStart", @sliding-end="onSlideEnd", img-width="400", img-height="400")
+            b-carousel-slide(v-for="media in Media" :key= "media.id" :img-src="media.images[0].url")
+    // Card with lorem ipsum for a brief description of slogan or mision and vision of company.
+    .container
+        .card.white.black-text.text-center.relative
+            h4.medium.slim En <strong class="satisfy medium"> Alquileres Santana</strong> el cliente no es una opinion, es una ley
+            p.top-space Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+                |         tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+                |         quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+                |         consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
+                |         cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
+                |          proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                strong.satisfy - CEO
+    // Contact form to send email for more information. TODO: Add facebook API support
+    .black.white-text.full-height.container-fluid.no-padding#contact-form
+        .row.full-height
+            .col-12.contact-wrap.no-padding
+                .form-wrapper
+                    .form-div
+                        form#form
+                            .input-wrap
+                                input(type="text", name="name", placeholder="Nombre *", maxlength="33", required=true).feedback-input
+                                input(type="tel", name="phone", placeholder="Telefono *", maxlength="33", required=true).feedback-input
+                            input(type="email", name="email", placeholder="Correo *" maxlength="99" required=true).feedback-input
+                            textarea(name="message", placeholder="Mensaje *", maxlength="999" required=true).feedback-input.message
+                            button(type="submit").send-button Contactanos!
+
+    // Map with location using Google Maps API.
+    #location.container-fluid.pt-5.pb-5
+        .row.full-height#location-row
+            .col-12.col-md-6.col-lg-6#map-column
+                gmap-map(:center="center", :zoom="15" style="width: 100%; height: 100%; border-style: solid; border-width: 4.5px; border-color: dimgray; border-radius:50%;" id="map-container")
+                    gmap-marker(:key="index", v-for="(m, index) in markers" :position="m.position", :clickable="false", :draggable="false")
+            .col-12.col-md-6.col-lg-6.white-text.pt-5#location-info
+                p.pt-5 Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+                    |         tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+                    |         quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+                    |         consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
+                    |         cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
+                    |          proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+    // Footer
+    #footer.container-fluid.pt-2.pb-1
+        .row
+            .col-12.text-center.white-text.pt-1
+                p Powered by <strong>LoLiCode</strong>.
+
+
+
