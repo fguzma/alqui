@@ -21,7 +21,7 @@
   <script>
     function save(condition)
     {
-      var ruta="https://alquiler.herokuapp.com/servicio";
+      var ruta="https://alqui.herokuapp.com/servicio";
       var token=$("#token").val();
       $.ajax({
         url: ruta,
@@ -37,7 +37,7 @@
           }
           if(condition=="savev")
           {
-            location.href="https://alquiler.herokuapp.com/serviciov/1/"+$("#nombre").val();
+            location.href="https://alqui.herokuapp.com/serviciov/1/"+$("#nombre").val();
           }
         }
       }).fail( function( jqXHR, textStatus, errorThrown ) {

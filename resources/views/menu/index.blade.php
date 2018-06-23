@@ -141,7 +141,7 @@
         });
         function actualizar()
         {
-            route="https://alquiler.herokuapp.com/menus/"+$("#id").val();
+            route="https://alqui.herokuapp.com/menus/"+$("#id").val();
             var token=$("#token").val();
             var formData = new FormData($('#data')[0]);
             console.log(formData);
@@ -173,7 +173,7 @@
         $('.delete').on( 'click', function () {
             
             var row=$(this).parents('tr');
-            var route="https://alquiler.herokuapp.com/menus/"+$(this).val();
+            var route="https://alqui.herokuapp.com/menus/"+$(this).val();
             var token=$("#token").val();
             $.ajax({
                 url: route,

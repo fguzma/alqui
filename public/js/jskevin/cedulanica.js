@@ -65,7 +65,7 @@ function formatonica(campo)
 }
 function filtrocedulacli(vista)
 {
-    var ruta="https://alquiler.herokuapp.com/filtrocliente/"+vista+"/"+$("#cedu").val();
+    var ruta="https://alqui.herokuapp.com/filtrocliente/"+vista+"/"+$("#cedu").val();
     console.log($("#cedu").val());
     var token=$("#token").val();
     
@@ -79,7 +79,7 @@ function filtrocedulacli(vista)
 }
 function filtrocedulaper(vista)
 {
-    var ruta="https://alquiler.herokuapp.com/filtropersonal/"+vista+"/"+$("#cedu").val();
+    var ruta="https://alqui.herokuapp.com/filtropersonal/"+vista+"/"+$("#cedu").val();
     var token=$("#token").val();
     $.get(ruta, function(res){
         $("#lista").empty();//Elimina la lista actual

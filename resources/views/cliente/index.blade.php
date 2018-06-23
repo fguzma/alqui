@@ -189,7 +189,7 @@
         });
         function erase(cedula)
         {
-            var route="https://alquiler.herokuapp.com/cliente/"+cedula;
+            var route="https://alqui.herokuapp.com/cliente/"+cedula;
             var token=$("#token").val();
             $.ajax({
                 url: route,
@@ -216,7 +216,7 @@
         });
         function actualizar()
         {
-            route="https://alquiler.herokuapp.com/cliente/"+$("#ce").val();
+            route="https://alqui.herokuapp.com/cliente/"+$("#ce").val();
             var token=$("#token").val();
             $.ajax({
                 url: route,

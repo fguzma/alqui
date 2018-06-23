@@ -182,7 +182,7 @@
             else
                 item=$("#nombreA").val();
             console.log(servi+"--"+item);
-            var ruta="https://alquiler.herokuapp.com/filtroinventario/"+servi+'/'+item;
+            var ruta="https://alqui.herokuapp.com/filtroinventario/"+servi+'/'+item;
             console.log(ruta);
             var token=$("#token").val();
             $.get(ruta, function(res){
@@ -203,7 +203,7 @@
         });
         function actualizar()
         {
-            route="https://alquiler.herokuapp.com/inventario/"+$("#id").val();
+            route="https://alqui.herokuapp.com/inventario/"+$("#id").val();
             var token=$("#token").val();
             $.ajax({
                 url: route,
@@ -235,7 +235,7 @@
         }
         $('.delete').on( 'click', function () {
             var row=$(this).parents('tr');
-            var route="https://alquiler.herokuapp.com/inventario/"+$(this).val();
+            var route="https://alqui.herokuapp.com/inventario/"+$(this).val();
             var token=$("#token").val();
             $.ajax({
                 url: route,

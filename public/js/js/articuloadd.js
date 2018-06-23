@@ -157,7 +157,7 @@ function CambioPag()
 
 $("#impri").click(function(){
 
-    var route="https://alquiler.herokuapp.com/pdf";
+    var route="https://alqui.herokuapp.com/pdf";
     
     var token=$("#token").val();
 

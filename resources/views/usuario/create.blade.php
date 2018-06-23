@@ -77,7 +77,7 @@
       /*validacion para el usuario*/
       if(decision==1)
       {
-        var ruta="https://alquiler.herokuapp.com/userexist/"+$("#usuario").val()+"/"+decision;
+        var ruta="https://alqui.herokuapp.com/userexist/"+$("#usuario").val()+"/"+decision;
         if($("#usuario").val()!="")
         {
           $.get(ruta, function(res){
@@ -92,7 +92,7 @@
       /*validacion para el correo*/
       if(decision==2)
       {
-        var ruta="https://alquiler.herokuapp.com/userexist/"+$("#Correo").val()+"/"+decision;
+        var ruta="https://alqui.herokuapp.com/userexist/"+$("#Correo").val()+"/"+decision;
         if($("#correo").val()!="")
         {
           $.get(ruta, function(res){
@@ -106,7 +106,7 @@
     }
     function save(condition)
     {
-      var ruta="https://alquiler.herokuapp.com/usuario";
+      var ruta="https://alqui.herokuapp.com/usuario";
       var token=$("#token").val();
       $.ajax({
         url: ruta,
@@ -124,7 +124,7 @@
             }
             if(condition=="savev")
             {
-              location.href="https://alquiler.herokuapp.com/usuariov/1/"+$("#Correo").val();
+              location.href="https://alqui.herokuapp.com/usuariov/1/"+$("#Correo").val();
             }
           }
           else

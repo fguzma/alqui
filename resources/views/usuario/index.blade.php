@@ -161,7 +161,7 @@
                 valorfil="no";
             else
                 valorfil=$("#valorf").val();
-            var ruta="https://alquiler.herokuapp.com/filtrousuario/"+tfiltro+'/'+valorfil;
+            var ruta="https://alqui.herokuapp.com/filtrousuario/"+tfiltro+'/'+valorfil;
             $.get(ruta, function(res){
                 $("#lista").empty();//Elimina la lista actual
                 //$(".pagination").remove();
@@ -180,7 +180,7 @@
         });
         function actualizar()
         {
-            route="https://alquiler.herokuapp.com/usuario/"+$("#id").val();
+            route="https://alqui.herokuapp.com/usuario/"+$("#id").val();
             var token=$("#token").val();
             $.ajax({
                 url: route,
@@ -259,7 +259,7 @@
                 $("#msjuser").empty();
                 if(user!=$("#usuario").val())
                 {
-                    var ruta="https://alquiler.herokuapp.com/userexist/"+$("#usuario").val()+"/"+decision;
+                    var ruta="https://alqui.herokuapp.com/userexist/"+$("#usuario").val()+"/"+decision;
                     if($("#usuario").val()!="")
                     {
                         $.get(ruta, function(res){
@@ -277,7 +277,7 @@
                 console.log("entreem");
                 if(email!=$("#Correo").val())
                 {
-                    var ruta="https://alquiler.herokuapp.com/userexist/"+$("#Correo").val()+"/"+decision;
+                    var ruta="https://alqui.herokuapp.com/userexist/"+$("#Correo").val()+"/"+decision;
                     if($("#correo").val()!="")
                     {
                         $.get(ruta, function(res){
@@ -311,7 +311,7 @@
 
         $('.delete').on( 'click', function () {
             var row=$(this).parents('tr');
-            var route="https://alquiler.herokuapp.com/usuario/"+$(this).val();
+            var route="https://alqui.herokuapp.com/usuario/"+$(this).val();
             var token=$("#token").val();
             $.ajax({
                 url: route,

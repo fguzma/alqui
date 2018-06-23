@@ -120,18 +120,18 @@
         {
             if($("#tipofil").val()=="Cliente")
             {
-                location.href ="https://alquiler.herokuapp.com/listacliente";
+                location.href ="https://alqui.herokuapp.com/listacliente";
                 
             }
             else
             {
-                location.href ="https://alquiler.herokuapp.com/listapersonal";
+                location.href ="https://alqui.herokuapp.com/listapersonal";
             }
         }
         function vetado()
         {
             console.log("entro");
-            var ruta="https://alquiler.herokuapp.com/vetar";
+            var ruta="https://alqui.herokuapp.com/vetar";
             var token=$("#token").val();
             $.ajax({
                 url: ruta,
@@ -186,7 +186,7 @@
         });
         $('.delete').on( 'click', function () {
             fila=$(this).parents('tr');
-            var ruta="https://alquiler.herokuapp.com/cliente/"+$(this).val()+"";
+            var ruta="https://alqui.herokuapp.com/cliente/"+$(this).val()+"";
             console.log(ruta);
             $("#descripcion").val("");
             $.get(ruta,function(res)

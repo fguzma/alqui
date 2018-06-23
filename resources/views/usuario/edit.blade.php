@@ -125,7 +125,7 @@
                         console.log("entreus");
             if(user!=$("#usuario").val())
             {
-                var ruta="https://alquiler.herokuapp.com/userexist/"+$("#usuario").val()+"/"+decision;
+                var ruta="https://alqui.herokuapp.com/userexist/"+$("#usuario").val()+"/"+decision;
                 if($("#usuario").val()!="")
                 {
                     $.get(ruta, function(res){
@@ -143,7 +143,7 @@
             console.log("entreem");
             if(email!=$("#Correo").val())
             {
-                var ruta="https://alquiler.herokuapp.com/userexist/"+$("#Correo").val()+"/"+decision;
+                var ruta="https://alqui.herokuapp.com/userexist/"+$("#Correo").val()+"/"+decision;
                 if($("#correo").val()!="")
                 {
                     $.get(ruta, function(res){

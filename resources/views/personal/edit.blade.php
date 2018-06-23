@@ -77,7 +77,7 @@
         }
         function guardar()
         {
-            var ruta = "https://alquiler.herokuapp.com/personal/"+$("#cedula").text()+"";
+            var ruta = "https://alqui.herokuapp.com/personal/"+$("#cedula").text()+"";
             var token = $("#token").val();
             //Consulta para añadir el nuevo personal
             $.ajax({
@@ -88,7 +88,7 @@
             data:$("#data").serialize(),
             success: function(res){
                 console.log("segundo");
-                ruta="https://alquiler.herokuapp.com/pcargoupdate";
+                ruta="https://alqui.herokuapp.com/pcargoupdate";
                 //Consulta para agregar los cargos que se han predefinido del personal
                 $.ajax({
                 url:ruta,
@@ -104,7 +104,7 @@
                     message(jqXHR,{tipo:"danger"});
                 });
                 console.log("se agrego");
-                location.href ="https://alquiler.herokuapp.com/personalv/2/"+$("#cedula").text();
+                location.href ="https://alqui.herokuapp.com/personalv/2/"+$("#cedula").text();
                 return;
             }
             }).fail( function( jqXHR, textStatus, errorThrown ) {

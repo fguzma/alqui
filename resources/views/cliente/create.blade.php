@@ -41,7 +41,7 @@
     var repetir=false;
     function buscar(cedula)
     {
-      var ruta="https://alquiler.herokuapp.com/cliente/"+cedula.value;
+      var ruta="https://alqui.herokuapp.com/cliente/"+cedula.value;
       var token=$("#token").val();
       autocompletado=false;
         $.ajax({
@@ -72,7 +72,7 @@
     
     function autocompletar(cedula)
     {
-      var ruta="https://alquiler.herokuapp.com/cliente/"+cedula;
+      var ruta="https://alqui.herokuapp.com/cliente/"+cedula;
       $.get(ruta, function(res){
             $("#Nombre").val(res.Nombre);
             $("#Apellido").val(res.Apellido);
@@ -89,7 +89,7 @@
     function save(decision)
     {
       var valor = $("#data").val();//{Cedula_Cliente:"999-999999-99999",Nombre:"Kavv",Apellido:"Kavv",Edad:45,Sexo:"Hombre"};
-      var ruta = "https://alquiler.herokuapp.com/cliente";
+      var ruta = "https://alqui.herokuapp.com/cliente";
       var token = $("#token").val();
       return $.ajax({
         url: ruta,
@@ -105,9 +105,9 @@
           }
 
           if(decision=="guardarv")
-            location.href ="https://alquiler.herokuapp.com/clientev/1/"+$("#CC").val();
+            location.href ="https://alqui.herokuapp.com/clientev/1/"+$("#CC").val();
           if(decision=="guardarr")
-            location.href ="https://alquiler.herokuapp.com/reservacliente/"+$("#CC").val();
+            location.href ="https://alqui.herokuapp.com/reservacliente/"+$("#CC").val();
 
           console.log("agregado");
         }
