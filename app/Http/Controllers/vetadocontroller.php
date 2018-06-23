@@ -9,7 +9,7 @@ use App\vetado;
 use App\Http\Requests\VetadoAdd;
 use DB;
 
-class vetadoController extends Controller
+class vetadocontroller extends Controller
 {
     public function index($tipo='cliente',$view="vetado.indexc",$cedu=null)
     {
