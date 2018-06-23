@@ -29,7 +29,7 @@ class ReservasController extends Controller
             ->where('desres.idReservacion','=', $id)
             ->get();
         $servicios=servicio::all();
-        $inventario=Inventario::all();
+        $inventario=inventario::all();
         return view('reservacion.edit',['reservas'=>$reservas,'des'=>$des,'servicios'=>$servicios,'inventario'=>$inventario]);
     }
     public function update($id)

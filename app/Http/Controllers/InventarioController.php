@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Http\Requests\ArticuloAdd;
 use App\Http\Requests\ArticuloUpdate;
-use App\Inventario;
+use App\inventario;
 use App\servicio;
 use Redirect;
 use Session;
@@ -36,7 +36,7 @@ class InventarioController extends Controller
     }
     public function store(ArticuloAdd $request)
     { 
-        Inventario::create([
+        inventario::create([
             'ID_Servicio'=>$request['ID_Servicio'],    
             'Nombre'=> $request['Nombre'],    
             'Estado'=> "Bueno",
@@ -57,13 +57,13 @@ class InventarioController extends Controller
 
     public function destroy($id)
     {
-        $articulo=Inventario::find($id);
+        $articulo=inventario::find($id);
         $articulo->delete();
         return 1;
     }
     public function edit($id)
     {
-         $articulo=Inventario::find($id);//DB::table('cliente')->where('Cedula_Cliente','=',$Cedula_Cliente)->get()
+         $articulo=inventario::find($id);//DB::table('cliente')->where('Cedula_Cliente','=',$Cedula_Cliente)->get()
          //dd($cliente->get(0));
          //dd($cliente);
          //return $cliente->Nombre;
@@ -73,7 +73,7 @@ class InventarioController extends Controller
     }
     public function update($id,ArticuloUpdate $request)
     {
-        $articulo=Inventario::find($id);
+        $articulo=inventario::find($id);
         if($articulo['Nombre']==$request['Nombre'])
         {
             $articulo->fill($request->all());

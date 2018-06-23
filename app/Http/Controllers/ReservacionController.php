@@ -7,7 +7,7 @@ use App\Http\Requests;
 use App\reservacion;
 use App\descripcion;
 use App\servicio;
-use App\Inventario;
+use App\inventario;
 use App\desre;
 use App\cliente;
 use App\Menu;
@@ -26,7 +26,7 @@ class ReservacionController extends Controller
         /*Retorna todos los datos de la tabla reservacion e inventario de la BD a index*/
         $servicios=servicio::all();
         $menu=Menu::all();
-        $inventario=Inventario::where('Costo_Alquiler','>',0)->get();
+        $inventario=inventario::where('Costo_Alquiler','>',0)->get();
         $cliente=cliente::find($cedula);
         return view('reservacion.index',compact('servicios','inventario','cliente','menu'));
     }

@@ -134,10 +134,10 @@
         </a>
         <ul class="sidenav-second-level collapse" id="collapseInventario">
           <li href="">
-            {!!link_to_route('inventario.create', $title = 'Agregar Inventario')!!}
+            {!!link_to_route('inventario.create', $title = 'inventario')!!}
           </li>
           <li href="">
-            {!!link_to_route('inventario.index', $title = 'Ver Inventario')!!}
+            {!!link_to_route('inventario.index', $title = 'inventario')!!}
           </li>
         </ul>
       </li>
