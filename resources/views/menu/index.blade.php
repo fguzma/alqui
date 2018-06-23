@@ -141,7 +141,7 @@
         });
         function actualizar()
         {
-            route="http://127.0.0.1:8080/menus/"+$("#id").val();
+            route="https://alquiler.herokuapp.com/menus/"+$("#id").val();
             var token=$("#token").val();
             var formData = new FormData($('#data')[0]);
             console.log(formData);
@@ -173,7 +173,7 @@
         $('.delete').on( 'click', function () {
             
             var row=$(this).parents('tr');
-            var route="http://127.0.0.1:8080/menus/"+$(this).val();
+            var route="https://alquiler.herokuapp.com/menus/"+$(this).val();
             var token=$("#token").val();
             $.ajax({
                 url: route,

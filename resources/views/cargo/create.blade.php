@@ -164,7 +164,7 @@
     function guardar()
     {
       /*HACER FUNCIONAR ESTO*/
-      var ruta = "http://127.0.0.1:8080/cargosave";
+      var ruta = "https://alquiler.herokuapp.com/cargosave";
       var token = $("#token").val();
       console.log("entra");
       $.ajax({
@@ -198,7 +198,7 @@
     {
 
       /*HACER FUNCIONAR ESTO*/
-      var ruta = "http://127.0.0.1:8080/cargo";
+      var ruta = "https://alquiler.herokuapp.com/cargo";
       var token = $("#token").val();
       $("#msjlista").empty();
       console.log("entra");
@@ -216,7 +216,7 @@
           }
           if(decision=="guardarv")
           {
-            location.href="http://127.0.0.1:8080/cargov/1/"+$("#Nom").val();
+            location.href="https://alquiler.herokuapp.com/cargov/1/"+$("#Nom").val();
           }
           return;
         }
@@ -228,7 +228,7 @@
     }
     function recargalista()
     {
-      ruta="http://127.0.0.1:8080/listacargo";
+      ruta="https://alquiler.herokuapp.com/listacargo";
       $.get(ruta,function(res){
         $("#lc").empty();
         $("#lc").append(res);

@@ -26,7 +26,7 @@
     
     function save(condition)
     {
-      var ruta="http://127.0.0.1:8080/inventario";
+      var ruta="https://alquiler.herokuapp.com/inventario";
       var token=$("#token").val();
       $.ajax({
         url: ruta,
@@ -42,7 +42,7 @@
           }
           if(condition=="savev")
           {
-            location.href="http://127.0.0.1:8080/inventariov/1/"+$("#servicios").val()+"/"+$("#nombre").val();
+            location.href="https://alquiler.herokuapp.com/inventariov/1/"+$("#servicios").val()+"/"+$("#nombre").val();
           }
         }
       }).fail( function( jqXHR, textStatus, errorThrown ) {

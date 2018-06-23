@@ -157,7 +157,7 @@ function CambioPag()
 
 $("#impri").click(function(){
 
-    var route="http://127.0.0.1:8080/pdf";
+    var route="https://alquiler.herokuapp.com/pdf";
     
     var token=$("#token").val();
 

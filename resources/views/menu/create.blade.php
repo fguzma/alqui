@@ -23,7 +23,7 @@
   <script>
     function save(decision)
     {
-      var ruta = "http://127.0.0.1:8080/menus";
+      var ruta = "https://alquiler.herokuapp.com/menus";
       var token = $("#token").val();
       var formData = new FormData($('#data')[0]);
       console.log(formData);
@@ -43,7 +43,7 @@
           }
 
           /* if(decision=="guardarv")
-            location.href ="http://127.0.0.1:8080/clientev/1/"+$("#CC").val(); */
+            location.href ="https://alquiler.herokuapp.com/clientev/1/"+$("#CC").val(); */
 
           console.log("agregado");
         }

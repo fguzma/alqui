@@ -151,17 +151,17 @@
         {
             if($("#tipofil").val()=="Cliente")
             {
-                location.href ="http://127.0.0.1:8080/vetado/";
+                location.href ="https://alquiler.herokuapp.com/vetado/";
                 
             }
             else
             {
-                location.href ="http://127.0.0.1:8080/vetado/personal/vetado.indexp";
+                location.href ="https://alquiler.herokuapp.com/vetado/personal/vetado.indexp";
             }
         }
         function filtrovetado()
         {
-            var ruta="http://127.0.0.1:8080/vetado/personal/vetado.recargable.lvp/"+$("#cedu").val();
+            var ruta="https://alquiler.herokuapp.com/vetado/personal/vetado.recargable.lvp/"+$("#cedu").val();
             $.get(ruta,function(res){
                 console.log(res);
                 $("#lista").empty();
@@ -171,7 +171,7 @@
         
          $('.edit').on( 'click', function () {
             fila=$(this).parents('tr');//Dejamos almacenada temporalmente la fila en la que clickeamos editar
-            var ruta="http://127.0.0.1:8080/descripcion/personal/"+$(this).val();
+            var ruta="https://alquiler.herokuapp.com/descripcion/personal/"+$(this).val();
             $.get(ruta,function(res)
             {
                 console.log(res);
@@ -186,7 +186,7 @@
         function actualizar()
         {
             console.log("entro");
-            var ruta="http://127.0.0.1:8080/vetado/"+$("#cedula").text();
+            var ruta="https://alquiler.herokuapp.com/vetado/"+$("#cedula").text();
             var token=$("#token").val();
             $.ajax({
                 url: ruta,
@@ -208,7 +208,7 @@
         
         $('.delete').on( 'click', function () {
             var row=$(this).parents('tr');
-            var route="http://127.0.0.1:8080/vetado/"+$(this).val();
+            var route="https://alquiler.herokuapp.com/vetado/"+$(this).val();
             var token=$("#token").val();
             $.ajax({
                 url: route,

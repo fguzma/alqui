@@ -122,15 +122,15 @@
             var ruta;
             console.log($("#tipofil").val()+"entra");
             if($("#tipofil").val()=="Cliente")
-                location.href ="http://127.0.0.1:8080/listacliente";
+                location.href ="https://alquiler.herokuapp.com/listacliente";
             else
-                location.href ="http://127.0.0.1:8080/listapersonal";
+                location.href ="https://alquiler.herokuapp.com/listapersonal";
         }
 
         function vetado()
         {
             console.log("entro");
-            var ruta="http://127.0.0.1:8080/vetar";
+            var ruta="https://alquiler.herokuapp.com/vetar";
             var token=$("#token").val();
             $.ajax({
                 url: ruta,
@@ -183,7 +183,7 @@
         });
         $('.delete').on( 'click', function () {
             fila=$(this).parents('tr');
-            var ruta="http://127.0.0.1:8080/personal/"+$(this).val();
+            var ruta="https://alquiler.herokuapp.com/personal/"+$(this).val();
             console.log(ruta);
             $("#descripcion").val("");
             $.get(ruta,function(res)

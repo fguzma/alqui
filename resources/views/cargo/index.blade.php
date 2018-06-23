@@ -100,7 +100,7 @@
         //Filtramos por el campo cedula    
         function filtro(val)
         {
-            var ruta="http://127.0.0.1:8080/filtrocargo/"+val.value;
+            var ruta="https://alquiler.herokuapp.com/filtrocargo/"+val.value;
             var token=$("#token").val();
             $.get(ruta, function(res){
                 $("#lista").empty();//Elimina la lista actual
@@ -118,7 +118,7 @@
         //Actualizacion de fila donde no es posible actualizar id
         function actualizar()
         {
-            route="http://127.0.0.1:8080/cargo/"+$("#id").val();
+            route="https://alquiler.herokuapp.com/cargo/"+$("#id").val();
             var token=$("#token").val();
             $.ajax({
                 url: route,
@@ -143,7 +143,7 @@
             });
         }
         $('.delete').on( 'click', function () {
-            var route="http://127.0.0.1:8080/cargo/"+$(this).val();
+            var route="https://alquiler.herokuapp.com/cargo/"+$(this).val();
             var token=$("#token").val();
             var row=$(this).parents('tr');
             $.ajax({

@@ -189,7 +189,7 @@
         });
         function erase(cedula)
         {
-            var route="http://127.0.0.1:8080/cliente/"+cedula;
+            var route="https://alquiler.herokuapp.com/cliente/"+cedula;
             var token=$("#token").val();
             $.ajax({
                 url: route,
@@ -216,7 +216,7 @@
         });
         function actualizar()
         {
-            route="http://127.0.0.1:8080/cliente/"+$("#ce").val();
+            route="https://alquiler.herokuapp.com/cliente/"+$("#ce").val();
             var token=$("#token").val();
             $.ajax({
                 url: route,
