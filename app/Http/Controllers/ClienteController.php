@@ -7,7 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests;
 use App\Http\Requests\clienteAdd;
 use App\Http\Requests\clienteUpdate;
-use App\Cliente;
+use App\cliente;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Pagination\Paginator;
 use Redirect;
@@ -23,7 +23,7 @@ class ClienteController extends Controller
     }
     public function index($msj=null,$cedula="")
     { 
-        $clientes=Cliente::all();
+        $clientes=cliente::all();
         if($msj=="2")
         {
             session::flash('message','Cliente editado exitosamente');
@@ -39,7 +39,7 @@ class ClienteController extends Controller
     }
     public function store(clienteAdd $request)
     { 
-            Cliente::create([
+            cliente::create([
             'Cedula_Cliente'=>$request['Cedula_Cliente'],    
             'Nombre'=> $request['Nombre']." ",
             'Apellido'=>$request['Apellido'],
@@ -58,7 +58,7 @@ class ClienteController extends Controller
     }
     public function edit($Cedula_Cliente)
     {
-         $cliente=Cliente::find($Cedula_Cliente);//DB::table('cliente')->where('Cedula_Cliente','=',$Cedula_Cliente)->get()
+         $cliente=cliente::find($Cedula_Cliente);//DB::table('cliente')->where('Cedula_Cliente','=',$Cedula_Cliente)->get()
          //dd($cliente->get(0));
          //dd($cliente);
          //return $cliente->Nombre;
@@ -109,7 +109,7 @@ class ClienteController extends Controller
     }
     public function lista()
     {
-        return DataTables::eloquent(Cliente::query())->make(true);
+        return DataTables::eloquent(cliente::query())->make(true);
         return view($vista,compact('clientes'));
     }
     public function prueba()
@@ -119,7 +119,7 @@ class ClienteController extends Controller
             
     public function agregado($valor=null)
     {
-        $clientes=Cliente::paginate(10);
+        $clientes=cliente::paginate(10);
         return view('cliente.index',compact('clientes','valor'));
     }
 

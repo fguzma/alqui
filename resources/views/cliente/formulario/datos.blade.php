@@ -11,7 +11,7 @@
             <div class="col-md-4">
               <div class="form-group">
                   {!!Form::label('Apellido:')!!}
-                  {!!Form::text('Apellido',null,['id'=>'Apellido','class'=>'form-control','placeholder'=>'Apellido del Cliente'])!!}
+                  {!!Form::text('Apellido',null,['id'=>'Apellido','class'=>'form-control','placeholder'=>'cliente'])!!}
               </div>
             </div>
             <div class="col-md-2"></div>
