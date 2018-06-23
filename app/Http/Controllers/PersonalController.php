@@ -142,7 +142,7 @@ class PersonalController extends Controller
     }
     public function create()
     {
-        $Cargo=Cargo::all();
+        $Cargo=cargo::all();
         return view('personal.create',['message'=>"",'Cargos'=>$Cargo]);
     }
     public function show($cedula)

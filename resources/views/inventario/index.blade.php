@@ -61,7 +61,7 @@
                             <div class="col-md-3"></div>
                             <div class="col-md-6">
                                 <div class="form-group text-center">
-                                    {!!Form::label('Servicio:')!!}
+                                    {!!Form::label('servicio')!!}
                                     <select class="form-control" name="ID_Servicio" id="servicios">
                                         @foreach($servicios as $servicio)
                                             <option class="{!!$servicio->Nombre!!}" value='{!!$servicio->ID_Servicio!!}'>{!!$servicio->Nombre!!}</option>

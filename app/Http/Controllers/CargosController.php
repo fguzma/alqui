@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Cargo;
+use App\cargo;
 use App\cargo_personal;
 use App\personal;
 use App\Http\Requests\CargoAdd;
@@ -34,7 +34,7 @@ class CargosController extends Controller
     }
     public function create()
     {
-        $Cargos=Cargo::all();
+        $Cargos=cargo::all();
         $personal=personal::all();
         return view("cargo.create", compact('Cargos','personal'));
     }
@@ -79,7 +79,7 @@ class CargosController extends Controller
     }
     public function recargarlista()
     {
-        $Cargos=Cargo::all();
+        $Cargos=cargo::all();
         return view('cargo.listacargo.listacargo',compact('Cargos'));
     }
     public function destroy($id)

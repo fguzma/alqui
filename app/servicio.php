@@ -5,14 +5,14 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Cargo extends Model
+class servicio extends Model
 {
-    protected $table='cargo';
-    public $primaryKey='ID_Cargo';
+    protected $table='servicio';
+    public $primaryKey='ID_Servicio';
     public $incrementing = false;
     use SoftDeletes;
     protected $dates = ['deleted_at'];
     protected $fillable = [
-        'Nombre_Cargo',
+        'ID_Servicio','Nombre',
     ];
 }

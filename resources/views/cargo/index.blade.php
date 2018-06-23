@@ -40,7 +40,7 @@
                             <div class="col-md-1"></div>
                             <div class="col-md-10">
                                 <div class="form-group">
-                                    {!!Form::label('Nombre del Cargo:')!!}
+                                    {!!Form::label('cargo')!!}
                                     {!!Form::text('Nombre_Cargo',null,['id'=>'Nom', 'class'=>'form-control','placeholder'=>'ej: Conductor'])!!}
                                 </div>
                             </div>
@@ -129,7 +129,7 @@
                 success: function(res){
                     if(res==1)
                     {
-                        message(['Cargo editado correctamente'],{manual:true});
+                        message(['cargo editado correctamente'],{manual:true});
                         table.cell(fila.children('td')[0]).data( $("#Nom").val());
                         table=$("#Datos").DataTable().draw();
                     }

@@ -24,7 +24,7 @@ class ReservacionController extends Controller
     public function index($cedula=null)
     {
         /*Retorna todos los datos de la tabla reservacion e inventario de la BD a index*/
-        $servicios=Servicio::all();
+        $servicios=servicio::all();
         $menu=Menu::all();
         $inventario=Inventario::where('Costo_Alquiler','>',0)->get();
         $cliente=cliente::find($cedula);

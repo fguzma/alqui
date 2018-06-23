@@ -7,7 +7,7 @@ use App\Http\Requests;
 use App\Http\Requests\ArticuloAdd;
 use App\Http\Requests\ArticuloUpdate;
 use App\Inventario;
-use App\Servicio;
+use App\servicio;
 use Redirect;
 use Session;
 use DB;
@@ -46,7 +46,7 @@ class InventarioController extends Controller
             'Disponibilidad'=> $request['options'],
         ]);
 
-        $servicios=Servicio::all();
+        $servicios=servicio::all();
         Session::flash('message','Articulo Agregado correctamente');
         Session::flash('tipo','info');
         return response()->json(
@@ -67,7 +67,7 @@ class InventarioController extends Controller
          //dd($cliente->get(0));
          //dd($cliente);
          //return $cliente->Nombre;
-         $servicios=Servicio::all();
+         $servicios=servicio::all();
          return view('inventario.edit',['articulo'=>$articulo,'servicios'=>$servicios]);
        // return Redirect::to('/editar');
     }
@@ -94,7 +94,7 @@ class InventarioController extends Controller
     }
     public function create()
     {
-        $servicios=Servicio::all();
+        $servicios=servicio::all();
         return view('inventario.create',['message'=>"",'servicios'=>$servicios]);
     }
     public function lista($idservicio=null,$nombreArt=null)

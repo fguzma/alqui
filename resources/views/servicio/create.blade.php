@@ -32,7 +32,7 @@
         success: function(result){
           if(condition=="save")
           {
-            message(["Servicio agregado exitosamente"],{manual:true})
+            message(["servicio agregado exitosamente"],{manual:true})
             $("#nombre").val("");
           }
           if(condition=="savev")

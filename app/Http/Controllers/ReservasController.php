@@ -28,7 +28,7 @@ class ReservasController extends Controller
             ->join('desres', 'descripcion.IdDescripcion', '=', 'desres.idDescripcion')
             ->where('desres.idReservacion','=', $id)
             ->get();
-        $servicios=Servicio::all();
+        $servicios=servicio::all();
         $inventario=Inventario::all();
         return view('reservacion.edit',['reservas'=>$reservas,'des'=>$des,'servicios'=>$servicios,'inventario'=>$inventario]);
     }

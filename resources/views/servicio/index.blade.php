@@ -127,7 +127,7 @@
                 success: function(res){
                     if(res==1)
                     {
-                        message(['Servicio editado correctamente'],{manual:true});
+                        message(['servicio editado correctamente'],{manual:true});
                         table.cell(fila.children('td')[0]).data( $("#nombre").val());
                         table=$("#Datos").DataTable().draw();
                     }
