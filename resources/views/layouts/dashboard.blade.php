@@ -82,7 +82,7 @@
         </a>
         <ul class="sidenav-second-level collapse" id="collapseCargo">
           <li >
-            {!!link_to_route('cargo.create', $title = 'cargo')!!}
+            {!!link_to_route('cargo.create', $title = 'Cargo')!!}
           </li>
 
           <li >
@@ -117,7 +117,7 @@
         </a>
         <ul class="sidenav-second-level collapse" id="collapseServicio">
           <li href="">
-            {!!link_to_route('servicio.create', $title = 'servicio')!!}
+            {!!link_to_route('servicio.create', $title = 'Servicio')!!}
           </li>
           <li href="">
             {!!link_to_route('servicio.index', $title = 'Ver Servicio')!!}
