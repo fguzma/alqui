@@ -31,12 +31,12 @@ class ReservacionController extends Controller
         return view('reservacion.index',compact('servicios','inventario','cliente','menu'));
     }
     public function store(AddReserva $request)
-    { 
+    {
         $Arreglo=[""];
         $cadena=$request['puto'];
         $pos=0;
         //recorre un arreglo que contiene los items reservados con sus respectiva informacion+el gran total
-        for ($i=0; $i <strlen($cadena); $i++) { 
+        for ($i=0; $i <strlen($cadena); $i++) {
             if(strcmp($cadena[$i],',')===0)
             {
                 $pos++;
@@ -44,7 +44,7 @@ class ReservacionController extends Controller
             }
             else
             {
-            $Arreglo[$pos]=$Arreglo[$pos].$cadena[$i];
+                $Arreglo[$pos]=$Arreglo[$pos].$cadena[$i];
             }
         }
         /*Si envie el parametro guardar, lo guarda*/
@@ -52,11 +52,11 @@ class ReservacionController extends Controller
         {
             //Agregamos a la tabla reservacion
             reservacion::create([
-            'Cedula_Cliente'=>$request['Cedula_Cliente'],    
-            'Nombre_Contacto'=> $request['Nombre_Contacto'],
-            'Direccion_Local'=>($request['Direccion_Local']),
-            'Fecha_Inicio'=>$request['Fecha_Inicio'],
-            'Fecha_Fin'=>$request['Fecha_Fin'],
+                'Cedula_Cliente'=>$request['Cedula_Cliente'],
+                'Nombre_Contacto'=> $request['Nombre_Contacto'],
+                'Direccion_Local'=>($request['Direccion_Local']),
+                'Fecha_Inicio'=>$request['Fecha_Inicio'],
+                'Fecha_Fin'=>$request['Fecha_Fin'],
             ]);
             $reservacion=reservacion::all();
             $reservacion=$reservacion->last();
@@ -65,12 +65,12 @@ class ReservacionController extends Controller
             for($i=0;$i<(count($Arreglo)-4)/4;$i++)//restamos 4 porque hay 4 elementos de mas y dividimos entre la cantidad de columnas para q nos de la cantidad de fila
             {
                 descripcion::create([
-                'Cantidad'=> $Arreglo[$pos+1],
-                'Nombre'=>$Arreglo[$pos],
-                'P_Unitario'=>$Arreglo[$pos+2],
-                'Total'=>$Arreglo[$pos+3],
+                    'Cantidad'=> $Arreglo[$pos+1],
+                    'Nombre'=>$Arreglo[$pos],
+                    'P_Unitario'=>$Arreglo[$pos+2],
+                    'Total'=>$Arreglo[$pos+3],
                 ]);
-                    
+
                 $des=descripcion::all();
                 $des=$des->last();
                 $pos+=4;
@@ -89,12 +89,12 @@ class ReservacionController extends Controller
             $DL=($request['Direccion_Local']);
             $FI=$request['Fecha_Inicio'];
             $FF=$request['Fecha_Fin'];
-            
-        /* return  $request['artifin'];
-            $view =  \View::make('reservacion.pdf', compact('CC', 'NC', 'DL','FI', 'FF'))->render();*/
+
+            /* return  $request['artifin'];
+                $view =  \View::make('Reservacion.pdf', compact('CC', 'NC', 'DL','FI', 'FF'))->render();*/
             //$pdf = \App::make('dompdf.wrapper');
-        // $pdf->loadHTML($view);
-            $pdf=PDF::loadView('reservacion.fac', compact('CC', 'NC', 'DL','FI', 'FF','Arreglo'));
+            // $pdf->loadHTML($view);
+            $pdf=PDF::loadView('Reservacion.fac', compact('CC', 'NC', 'DL','FI', 'FF','Arreglo'));
             $now = new \DateTime();
             return $pdf->stream('factura'.$now->format('Y-m-d_H_i_s').'.pdf');
         }

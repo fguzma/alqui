@@ -18,16 +18,16 @@ class ReservasController extends Controller
     public function index()
     {
         $reservas=reservacion::paginate(10);
-        return view('reservacion.ver',compact('reservas'));
+        return view('Reservacion.ver',compact('reservas'));
     }
     public function edit($id)
     {
         $reservas=reservacion::find($id);
         $des = \DB::table('descripcion')
-        ->select('descripcion.IdDescripcion','Nombre','Cantidad','P_Unitario','Total')
-        ->join('desres', 'descripcion.IdDescripcion', '=', 'desres.idDescripcion')
-        ->where('desres.idReservacion','=', $id)
-        ->get();
+            ->select('descripcion.IdDescripcion','Nombre','Cantidad','P_Unitario','Total')
+            ->join('desres', 'descripcion.IdDescripcion', '=', 'desres.idDescripcion')
+            ->where('desres.idReservacion','=', $id)
+            ->get();
         $servicios=Servicio::all();
         $inventario=Inventario::all();
         return view('reservacion.edit',['reservas'=>$reservas,'des'=>$des,'servicios'=>$servicios,'inventario'=>$inventario]);
@@ -37,8 +37,8 @@ class ReservasController extends Controller
         $Arreglo=[""];
         $cadena=$request['puto'];
         $pos=0;
-        
-        for ($i=0; $i <strlen($cadena); $i++) { 
+
+        for ($i=0; $i <strlen($cadena); $i++) {
             if(strcmp($cadena[$i],',')===0)
             {
                 $pos++;
@@ -46,7 +46,7 @@ class ReservasController extends Controller
             }
             else
             {
-            $Arreglo[$pos]=$Arreglo[$pos].$cadena[$i];
+                $Arreglo[$pos]=$Arreglo[$pos].$cadena[$i];
             }
         }
         if(strcmp($request['accion'],"guarda")==0)
@@ -68,7 +68,7 @@ class ReservasController extends Controller
                 'P_Unitario'=>$Arreglo[$pos+2],
                 'Total'=>$Arreglo[$pos+3],
                 ]);
-                    
+
                 $des=descripcion::all();
                 $des=$des->last();
                 $pos+=4;
@@ -88,14 +88,14 @@ class ReservasController extends Controller
             $FI=$request['Fecha_Inicio'];
             $FF=$request['Fecha_Fin'];
             */
-        /* return  $request['artifin'];
-            $view =  \View::make('reservacion.pdf', compact('CC', 'NC', 'DL','FI', 'FF'))->render();*/
+            /* return  $request['artifin'];
+                $view =  \View::make('Reservacion.pdf', compact('CC', 'NC', 'DL','FI', 'FF'))->render();*/
             //$pdf = \App::make('dompdf.wrapper');
-        // $pdf->loadHTML($view);
-            $pdf=PDF::loadView('reservacion.fac', compact('CC', 'NC', 'DL','FI', 'FF','Arreglo'));
+            // $pdf->loadHTML($view);
+            $pdf=PDF::loadView('Reservacion.fac', compact('CC', 'NC', 'DL','FI', 'FF','Arreglo'));
             return $pdf->stream('invoice.pdf');
         }
-         $usuario=personal::find($cedula);
+        $usuario=personal::find($cedula);
         $usuario->fill($request->all());
         $usuario->save();
         return redirect('/personal')->with('message',"Se edito al trabajador exitosamente");//view('personal.create',['message'=>"Se agrego al usuario exitosamente"]);
@@ -105,19 +105,19 @@ class ReservasController extends Controller
         if($tipof=="CC" && $valor!="no")
         {
             $reservas=reservacion::where('Cedula_Cliente','like',$valor.'%')->get();
-            return view('reservacion.recargable.listareservas',compact('reservas'));
+            return view('Reservacion.recargable.listareservas',compact('reservas'));
         }
         if($tipof=="NC" && $valor!="no")
         {
             $reservas=reservacion::where('Nombre_Contacto','like',$valor.'%')->get();
-            return view('reservacion.recargable.listareservas',compact('reservas'));
+            return view('Reservacion.recargable.listareservas',compact('reservas'));
         }
         if($tipof=="fechafac" && $valor!="no")
         {
             $reservas=reservacion::whereBetween('created_at',['2017-10-21','2017-12-21'])->get();
-            return view('reservacion.recargable.listareservas',compact('reservas'));
+            return view('Reservacion.recargable.listareservas',compact('reservas'));
         }
         $reservas=reservacion::all();
-        return view('reservacion.recargable.listareservas',compact('reservas'));
+        return view('Reservacion.recargable.listareservas',compact('reservas'));
     }
 }
