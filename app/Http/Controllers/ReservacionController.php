@@ -91,10 +91,10 @@ class ReservacionController extends Controller
             $FF=$request['Fecha_Fin'];
 
             /* return  $request['artifin'];
-                $view =  \View::make('Reservacion.pdf', compact('CC', 'NC', 'DL','FI', 'FF'))->render();*/
+                $view =  \View::make('reservacion.pdf', compact('CC', 'NC', 'DL','FI', 'FF'))->render();*/
             //$pdf = \App::make('dompdf.wrapper');
             // $pdf->loadHTML($view);
-            $pdf=PDF::loadView('Reservacion.fac', compact('CC', 'NC', 'DL','FI', 'FF','Arreglo'));
+            $pdf=PDF::loadView('reservacion.fac', compact('CC', 'NC', 'DL','FI', 'FF','Arreglo'));
             $now = new \DateTime();
             return $pdf->stream('factura'.$now->format('Y-m-d_H_i_s').'.pdf');
         }

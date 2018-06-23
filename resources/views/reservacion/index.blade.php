@@ -261,14 +261,14 @@
           <div id="carouselExampleSlidesOnly" class="carousel slide" data-ride="false">
             <div class="carousel-inner">
               <div id="menuparte1" class="carousel-item active">
-                @include('Reservacion.menu.menu')
+                @include('reservacion.menu.menu')
                 <div class="text-center">
                   {!!link_to('#TablaA',$title='Agregar nuevo plato',$attributes=['onclick'=>'CambioPagMenu();','class'=>'btn btn-primary'],$secure = null)!!}
                   <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                 </div>
               </div>
               <div id="menuparte2" class="carousel-item">
-                @include('Reservacion.menu.añadir')
+                @include('reservacion.menu.añadir')
                 <div class="text-center">
                   <input class="btn btn-success" type="button"  onclick="save('guardar');" value="Guardar">
                   {!!link_to('#TablaA',$title='Regresar al menu',$attributes=['onclick'=>'CambioPagMenu();','class'=>'btn btn-primary'],$secure = null)!!}

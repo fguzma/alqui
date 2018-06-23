@@ -32,7 +32,7 @@
                     <th style="width:21%;" class="text-center">Direccion</th>
                 </thead>
                 <tbody class="text-center" id="lista"    > 
-                    @include('Reservacion.recargable.listareservas')
+                    @include('reservacion.recargable.listareservas')
                 </tbody>
             </table>
         </div>
