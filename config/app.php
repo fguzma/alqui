@@ -163,7 +163,6 @@ return [
         Barryvdh\DomPDF\ServiceProvider::class,
         JD\Cloudder\CloudderServiceProvider::class,
 
-
     ],
 
     /*
@@ -216,6 +215,8 @@ return [
         'Html' => Collective\Html\HtmlFacade::class,
         'PDF' => Barryvdh\DomPDF\Facade::class,
         'Cloudder' => JD\Cloudder\Facades\Cloudder::class,
+        'DataTables' => Yajra\DataTables\Facades\DataTables::class,
+        'Calendar' => MaddHatter\LaravelFullcalendar\Facades\Calendar::class,
     ],
 
 ];
