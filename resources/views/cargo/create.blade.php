@@ -3,10 +3,9 @@
 <div class="card" >
   <h4 class="card-header" >Agregar Cargo</h4>
   <div class="card-body">
-    <div id="mensaje">
-      @include('alert.mensaje')
-    </div>
-    <form action="{{route('cargo.store')}}" method="POST" id="data" >
+    <div id="mensaje"></div>
+    @include('alert.mensaje')
+    <form id="data" >
 
         <input type="hidden" name="_method" value="POST">
         <input type="hidden" name="_token" value="{{ csrf_token() }}" id="token">
@@ -14,8 +13,10 @@
         <div class="row ">
             <div class="col-md-6">
                 <div class="form-group">
-                    {!!Form::label('cargo')!!}
+                    {!!Form::label('Nombre del Cargo:')!!}
                     {!!Form::text('Nombre_Cargo',null,['id'=>'Nom', 'class'=>'form-control','placeholder'=>'ej: Conductor'])!!}
+                    
+                    <input type="text" style="display:none;">
                 </div>
             </div>
         </div>
@@ -29,8 +30,6 @@
   <div id="msjtabla"></div>
   <div class="card-body text-center">
 
-    <input type="hidden" name="_method" value="POST">
-    <input type="hidden" name="_token" value="{{ csrf_token() }}">
     <a class="btn btn-primary " href="#tablaB" onclick="add()">Agregar</a>
     <div class="row ">
       <div class="form-group">
@@ -38,19 +37,20 @@
     </div>
 
     <!--TABLA A-->
-    <div class="row bg-dark" id="tablaA"> 
-      <div class="col-md-4 " id="lc">
+    <div class="row bg-dark" style="color:White; visibility:hidden;" id="tablaA"> 
+      <div class="col-md-4 " id="lc" style="height:30em; overflow:scroll; padding-left: 0px;">
         @include('cargo.listacargo.listacargo')
       </div>
       <div class="col-md-8" style="height:30em; overflow:scroll;padding-left: 0px; ">
         <div class="tab-content" id="nav-tabContent">
             <div  data-spy="scroll" class="tab-pane fade show active" role="tabpanel" >
-              <table class="table table-hover table-dark"  >
+              <table class="table table-hover table-dark" id="tablapersonal" cellspacing="0" style="width:100%;" >
                 <thead>
                   <tr>
                     <th>Nombre</th>
                     <th>Apellido</th>
                     <th>Cedula</th>
+                    <th class="text-center" data-orderable="false" ></th>
                   </tr>
                 </thead>
                 <tbody>
@@ -81,7 +81,7 @@
       <div class="col-md-12" style=" overflow:scroll;padding-left: 0px;padding-right: 0px; ">
         <div class="tab-content" id="nav-tabContent">
             <div  data-spy="scroll" class="tab-pane fade show active" role="tabpanel" >
-              <table class="table table-hover table-dark"  >
+              <table class="table table-hover table-dark " >
                 <thead>
                   <tr>
                     <th>Nombre</th>
@@ -107,7 +107,18 @@
 @stop
 @section("script")
   {!!Html::script("js/jskevin/tiposmensajes.js")!!} 
+  {!!Html::script("https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js")!!} 
+  {!!Html::script("https://cdn.datatables.net/1.10.16/js/dataTables.bootstrap4.min.js")!!} 
+  {!!Html::script("js/jskevin/kavvdt.js")!!} 
   <script>
+
+    
+    $(document).ready( function () {
+      createdt($("#tablacargos"),{dom:"f"});
+      createdt($("#tablapersonal"),{dom:"f"});
+      $("#tablaA").css("visibility", "visible");
+  });
+
   //PARA MAYOR EFICIENCIA HACER UN OBJETO PRINCIPAL CON UNA COLECCION DE OBJETO(similar a un tree) para poder hacer una agregacion grande
   //ejemplo: agregar persona1 con cargo x,y. persona2 con cargo x,y pero persona 3 con cargo a,b al mismo tiempo.
     var listapersonal=new Object();
@@ -116,29 +127,21 @@
     function addpersonal(elemento,nombre,apellido,cedula)
     {
       if(elemento.checked==true)
-      {
         listapersonal[cedula]=[nombre,apellido,cedula];
-      }
       else
-      {
         delete listapersonal[cedula];
-      }
     }
     //agregamos o eliminamos en la lista cargo
     function addcargo(elemento,cargo,key)
     {
       if(elemento.checked==true)
-      {
         listacargo[key]=[cargo,key];
-      }
       else
-      {
         delete listacargo[key];
-      }
     }
     function add()
     {
-      if(!jQuery.isEmptyObject(listapersonal) && typeof !jQuery.isEmptyObject(listacargo))
+      if(!jQuery.isEmptyObject(listapersonal) && !jQuery.isEmptyObject(listacargo))
       {
         $("#cardA").hide();
         $("#tb").empty();
@@ -164,7 +167,7 @@
     function guardar()
     {
       /*HACER FUNCIONAR ESTO*/
-      var ruta = "https://alqui.herokuapp.com/cargosave";
+      var ruta = "/cargosave";
       var token = $("#token").val();
       console.log("entra");
       $.ajax({
@@ -179,7 +182,6 @@
           if(result!=1)
           {
             message(result,{manual:true,objeto:$("#msjtabla"),tipo:'danger'});
-            console.log("se agrego");
           }
           else
           {
@@ -198,10 +200,8 @@
     {
 
       /*HACER FUNCIONAR ESTO*/
-      var ruta = "https://alqui.herokuapp.com/cargo";
+      var ruta = "/cargo";
       var token = $("#token").val();
-      $("#msjlista").empty();
-      console.log("entra");
       $.ajax({
         url: ruta,
         headers: {'X-CSRF-TOKEN': token},
@@ -209,34 +209,40 @@
         dataType: 'json',
         data:$("#data").serialize(),
         success: function(result){
-          if(decision=="guardar")
+          if(result==1)
           {
-            message(["Se agrego el cargo correctamente"],{manual:true});
-            recargalista();
+            if(decision=="guardar")
+            {
+              message(["Se agrego el cargo correctamente"],{manual:true});
+              recargalista();
+            }
+            if(decision=="guardarv")
+            {
+              location.href="/cargov/1/"+$("#Nom").val();
+            }
           }
-          if(decision=="guardarv")
+          else
           {
-            location.href="https://alqui.herokuapp.com/cargov/1/"+$("#Nom").val();
+            message(["El nombre del cargo ya existe"],{manual:true,tipo:"danger"});
           }
           return;
         }
       }).fail( function( jqXHR, textStatus, errorThrown ) {
-        console.log("AJAX error");
         message(jqXHR,{tipo:"danger"});
         
       });
     }
     function recargalista()
     {
-      ruta="https://alqui.herokuapp.com/listacargo";
+      ruta="/listacargo";
       $.get(ruta,function(res){
         $("#lc").empty();
         $("#lc").append(res);
+        createdt($("#tablacargos"),{dom:"f"});
         $("#cardA").show();
         $("#cardB").hide();
         $("#Nom").val("");
         listacargo=new Object();
-        console.log(listacargo);
       });
     }
     function retornar()
@@ -244,14 +250,5 @@
       $("#cardA").show();
       $("#cardB").hide();
     }
-  /*var ListaPersonal = new Object();
-  var cedula=["001-010997-0012p","kevin","valverde"];
-  var cedula2=["001-010997-0013p","asd","asd"];
-    $(document).ready(function(){
-      ListaPersonal[cedula[0]]=cedula;
-      ListaPersonal[cedula2[0]]=cedula2;
-      delete ListaPersonal["001-010997-0012p"];
-      console.log(ListaPersonal[cedula2[0]][1]);
-    });*/
   </script>
 @stop

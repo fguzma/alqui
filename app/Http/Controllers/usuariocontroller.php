@@ -4,18 +4,21 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\User;
-use App\Http\Requests;
 use App\Http\Requests\usuarioAdd;
 use App\Http\Requests\usuarioupdate;
-use Session;
-use Redirect;
 use Illuminate\Support\Facades\Hash;
+use Session;
 
 class usuariocontroller extends Controller
 {
+    
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
     public function index($msj=null,$email="")
     { 
-        $usuarios=user::all();
+        $usuarios=User::all();
         if($msj=="1")
         {
             session::flash('message','Usuario agregado exitosamente');
@@ -48,15 +51,15 @@ class usuariocontroller extends Controller
     }
     public function edit($name)
     {
-        $usuario=user::where('name','=',$name)->get();
+        $usuario=User::where('name','=',$name)->get();
         return view('usuario.edit',['usuario'=>$usuario]);
     }
     public function update($id,usuarioupdate $request)
     {
-        $usuario=user::where('id','=',$id)->get();//retornamos el registro de esta forma por la utilizacion del dato en edit *MEJORAR*
+        $usuario=User::where('id','=',$id)->get();//retornamos el registro de esta forma por la utilizacion del dato en edit *MEJORAR*
         if($usuario[0]['email']!=$request->get('correo'))//Si el correo original es diferente al recibido significa aun cambio de correo
         {
-            $consulta=user::where('email','=',$request->get('correo'))->get();//consultamos si ya existe
+            $consulta=User::where('email','=',$request->get('correo'))->get();//consultamos si ya existe
             if(count($consulta)>0)
             {
                 return response()->json(
@@ -70,7 +73,7 @@ class usuariocontroller extends Controller
         }
         if($usuario[0]['name']!=$request->get('Usuario'))
         {
-            $consulta=user::where('name','=',$request->get('Usuario'))->get();
+            $consulta=User::where('name','=',$request->get('Usuario'))->get();
             if(count($consulta)>0)
             {
                 return response()->json(
@@ -110,7 +113,7 @@ class usuariocontroller extends Controller
     }
     public function destroy($id)
     {
-        $usuario=user::find($id);
+        $usuario=User::find($id);
         $usuario->delete();
         return 1;
     }
@@ -118,7 +121,7 @@ class usuariocontroller extends Controller
     {
         if($decision=="1")
         {
-            $usuario=user::where('name','=',$parameter)->get();
+            $usuario=User::where('name','=',$parameter)->get();
             if($usuario!=null)
             {
                 return response()->json(
@@ -128,7 +131,7 @@ class usuariocontroller extends Controller
         }
         if($decision=="2")
         {
-            $usuario=user::where('email','=',$parameter)->get();
+            $usuario=User::where('email','=',$parameter)->get();
             if($usuario!=null)
             {
                 return response()->json(
@@ -141,20 +144,20 @@ class usuariocontroller extends Controller
     {
         if($tipof=="fus" && $valor!="no")
         {
-            $usuarios=user::where('name','like',$valor.'%')->get();
+            $usuarios=User::where('name','like',$valor.'%')->get();
             return view('usuario.recargable.listausuarios',compact('usuarios'));
         }
         if($tipof=="fco" && $valor!="no")
         {
-            $usuarios=user::where('email','like',$valor.'%')->get();
+            $usuarios=User::where('email','like',$valor.'%')->get();
             return view('usuario.recargable.listausuarios',compact('usuarios'));
         }
         if($tipof=="fi" && $valor!="no")
         {
-            $usuarios=user::where('identificacion','like',$valor.'%')->get();
+            $usuarios=User::where('identificacion','like',$valor.'%')->get();
             return view('usuario.recargable.listausuarios',compact('usuarios'));
         }
-        $usuarios=user::all();
+        $usuarios=User::all();
         return view('usuario.recargable.listausuarios',compact('usuarios'));
     }
 }

@@ -23,10 +23,11 @@
   <script>
     function save(decision)
     {
-      var ruta = "https://alqui.herokuapp.com/menus";
+      var ruta = "/menus";
       var token = $("#token").val();
       var formData = new FormData($('#data')[0]);
       console.log(formData);
+      message(["Enviando... por favor espere la confirmacion!"],{manual:true})
       $.ajax({
         url: ruta,
         headers: {'X-CSRF-TOKEN': token},
@@ -42,8 +43,8 @@
             limpiar();
           }
 
-          /* if(decision=="guardarv")
-            location.href ="http://128.0.0.1/clientev/1/"+$("#CC").val(); */
+          if(decision=="guardarv")
+            location.href ="/menus/1/"+$("#descripcion").val();
 
           console.log("agregado");
         }

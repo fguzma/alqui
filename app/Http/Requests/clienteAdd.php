@@ -28,7 +28,8 @@ class clienteAdd extends FormRequest
             'Nombre'=>'required',
             'Apellido'=>'required',
             'Edad'=>'required|numeric',
-            'Sexo'=>'required'
+            'Sexo'=>'required',
+            'Direccion' => 'max:300'
         ];
     }
 }

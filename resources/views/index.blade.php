@@ -8,7 +8,7 @@
     {!!Html::script("https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js")!!}
     {!!Html::script("https://code.jquery.com/jquery-migrate-3.0.0.js")!!}
 
-    {!!Html::style("css/cssF/principal/style.css")!!}
+    {!!Html::style("css/cssF/principal/styleP.css")!!}
     {!!Html::style("css/cssF/principal/reset.css")!!}
     {!!Html::script("js/jsF/principal/modernizr.js")!!}
   	

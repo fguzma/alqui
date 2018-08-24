@@ -26,7 +26,7 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                <form action="{{ route('menus.update', 18)}}" method="POST" id="data" enctype="multipart/form-data">
+                <form id="data" enctype="multipart/form-data">
                         <input type="hidden" name="_method" value="PUT">
                         <input type="hidden" name="_token" value="{{ csrf_token() }}" id="token">
                         <input type="hidden" id="id">
@@ -44,7 +44,7 @@
                             <div class="col-md-10">
                                 <div class="form-group">
                                     {!!Form::label('Costo:')!!}
-                                    {!!Form::text('costo',null,['id'=>'costo','class'=>'form-control','placeholder'=>'Costo'])!!}
+                                    {!!Form::text('costo',null,['id'=>'costo','class'=>'form-control','placeholder'=>'Costo', 'onkeypress'=>'return BlockEnter(event);'])!!}
                                 </div>
                             </div>
                         </div>
@@ -91,41 +91,12 @@
     {!!Html::script("https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js")!!} 
     {!!Html::script("https://cdn.datatables.net/1.10.16/js/dataTables.bootstrap4.min.js")!!} 
     {!!Html::script("js/jskevin/tiposmensajes.js")!!}  
+    {!!Html::script("js/jskevin/kavvdt.js")!!}   
     <script>
         var table;
         var fila;
         $(document).ready( function () {
-            table= $('#Datos').DataTable({
-                "pagingType": "full_numbers",//botones primero, anterio,siguiente, ultimo y numeros
-                "order": [[ 1, "asc" ]],//ordenara por defecto en la columna Nombre de forma ascendente
-                "scrollX": true,//Scroll horizontal
-                
-                "language": {//Cambio de idioma al español
-                    "lengthMenu": "Mostrar _MENU_ registros",
-                    "zeroRecords": "No se encontro ningun registro",
-                    "info": "Pagina _PAGE_ de _PAGES_",
-                    "infoEmpty": "No hay registros",
-                    "infoFiltered": "(Filtrado entre _MAX_ total registro)",
-                    "loadingRecords": "Cargando...",
-                    "processing": "Procesando...",
-                    "search": "Buscar:",
-                    "paginate": {
-                        "first": "Primera",
-                        "last": "Ultima",
-                        "next": "Siguiente",
-                        "previous": "Anterior"
-                    },
-                    "aria": {
-                        "sortAscending":  ": activar para ordenar la columna ascendente",
-                        "sortDescending": ": activar para odenar la columna descendente"
-                    },
-                    //Especificamos como interpretara los puntos decimales y los cientos
-                    "decimal": ".",
-                    "thousands": ","
-                },
-                //Definimos la cantidad de registros que se podran mostrar
-                "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "Todo"]],
-            }).search('{!!session("valor")!!}').draw();
+            table=createdt($('#Datos'),{buscar:'{!!session("valor")!!}',col:1,cant:[10,20,-1],cantT:[10,20,"Todo"]});
             $("#main").css("visibility", "visible");
         });
 
@@ -141,7 +112,7 @@
         });
         function actualizar()
         {
-            route="https://alqui.herokuapp.com/menus/"+$("#id").val();
+            route="/menus/"+$("#id").val();
             var token=$("#token").val();
             var formData = new FormData($('#data')[0]);
             console.log(formData);
@@ -173,7 +144,7 @@
         $('.delete').on( 'click', function () {
             
             var row=$(this).parents('tr');
-            var route="https://alqui.herokuapp.com/menus/"+$(this).val();
+            var route="/menus/"+$(this).val();
             var token=$("#token").val();
             $.ajax({
                 url: route,
@@ -229,5 +200,10 @@
                 $("#defaultCheck1").val(0);
             }
         });
+        
+        function BlockEnter(e){
+            tecla = (document.all) ? e.keyCode :e.which; 
+            return (tecla!=13); 
+        }
     </script>
 @stop

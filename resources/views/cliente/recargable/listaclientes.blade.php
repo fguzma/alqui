@@ -6,6 +6,7 @@
       <td>{{$cliente->Apellido}}</td>  
       <td>{{$cliente->Edad}}</td>  
       <td>{{$cliente->Sexo}}</td>  
+      <td>{{$cliente->Direccion}}</td>  
       <td class="botones">
         <input type="button" data-toggle="modal" data-target="#Edit" class="btn btn-primary edit" value="Editar">
         

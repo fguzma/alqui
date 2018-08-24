@@ -1,12 +1,7 @@
 @extends('layouts.dashboard')
 @section('content')
     <div class="d-block bg bg-dark" style="color:white; padding-top: 10px;visibility:hidden;" id="main">
-        <!--<div class="input-group mb-2 ">
-            <input onkeyup="filtro(this);" type="text" class="form-control" placeholder="Nombre del servicio" aria-label="Nombre del servicio" aria-describedby="basic-addon2" value="{!!session('valor')!!}">
-            <div class="input-group-append">
-                <button class="btn btn-dark" type="button" id="filtrar">Buscar</button>
-            </div>
-        </div>-->
+
 
         @include('alert.mensaje')
         <div id="mensaje"></div>
@@ -40,8 +35,9 @@
                             <div class="col-md-1"></div>
                             <div class="col-md-10">
                                 <div class="form-group">
-                                    {!!Form::label('cargo')!!}
+                                    {!!Form::label('Nombre del Cargo:')!!}
                                     {!!Form::text('Nombre_Cargo',null,['id'=>'Nom', 'class'=>'form-control','placeholder'=>'ej: Conductor'])!!}
+                                    <input type="text" style="display:none;">
                                 </div>
                             </div>
                         </div>
@@ -59,55 +55,17 @@
     {!!Html::script("https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js")!!} 
     {!!Html::script("https://cdn.datatables.net/1.10.16/js/dataTables.bootstrap4.min.js")!!} 
     {!!Html::script("js/jskevin/tiposmensajes.js")!!}  
+    {!!Html::script("js/jskevin/kavvdt.js")!!}  
 
     <script>
         var fila;
         var table;
         $(document).ready( function () {
-            table= $('#Datos').DataTable({
-                "pagingType": "full_numbers",//botones primero, anterio,siguiente, ultimo y numeros
-                "order": [[ 0, "asc" ]],//ordenara por defecto en la columna Nombre de forma ascendente
-                "scrollX": true,//Scroll horizontal
-                
-                "language": {//Cambio de idioma al español
-                    "lengthMenu": "Mostrar _MENU_ registros",
-                    "zeroRecords": "No se encontro ningun registro",
-                    "info": "Pagina _PAGE_ de _PAGES_",
-                    "infoEmpty": "No hay registros",
-                    "infoFiltered": "(Filtrado entre _MAX_ total registro)",
-                    "loadingRecords": "Cargando...",
-                    "processing": "Procesando...",
-                    "search": "Buscar:",
-                    "paginate": {
-                        "first": "Primera",
-                        "last": "Ultima",
-                        "next": "Siguiente",
-                        "previous": "Anterior"
-                    },
-                    "aria": {
-                        "sortAscending":  ": activar para ordenar la columna ascendente",
-                        "sortDescending": ": activar para odenar la columna descendente"
-                    },
-                    //Especificamos como interpretara los puntos decimales y los cientos
-                    "decimal": ".",
-                    "thousands": ","
-                },
-                //Definimos la cantidad de registros que se podran mostrar
-                "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "Todo"]],
-            }).search('{!!session("valor")!!}').draw();
+            table=createdt($('#Datos'),{buscar:'{!!session("valor")!!}',cant:[10,20,-1],cantT:[10,20,"Todo"]});
+
             $("#main").css("visibility", "visible");
         });
-        //Filtramos por el campo cedula    
-        function filtro(val)
-        {
-            var ruta="https://alqui.herokuapp.com/filtrocargo/"+val.value;
-            var token=$("#token").val();
-            $.get(ruta, function(res){
-                $("#lista").empty();//Elimina la lista actual
-                //$(".pagination").remove();
-                jQuery("#lista").append(res);//Actualiza la lista
-            });
-        }
+
         $('.edit').on( 'click', function () {
             fila=$(this).parents('tr');//Dejamos almacenada temporalmente la fila en la que clickeamos editar
             var row=table.row(fila).data();//Tomamos el contenido de la fila 
@@ -118,7 +76,7 @@
         //Actualizacion de fila donde no es posible actualizar id
         function actualizar()
         {
-            route="https://alqui.herokuapp.com/cargo/"+$("#id").val();
+            route="/cargo/"+$("#id").val();
             var token=$("#token").val();
             $.ajax({
                 url: route,
@@ -129,7 +87,7 @@
                 success: function(res){
                     if(res==1)
                     {
-                        message(['cargo editado correctamente'],{manual:true});
+                        message(['Cargo editado correctamente'],{manual:true});
                         table.cell(fila.children('td')[0]).data( $("#Nom").val());
                         table=$("#Datos").DataTable().draw();
                     }
@@ -143,7 +101,7 @@
             });
         }
         $('.delete').on( 'click', function () {
-            var route="https://alqui.herokuapp.com/cargo/"+$(this).val();
+            var route="/cargo/"+$(this).val();
             var token=$("#token").val();
             var row=$(this).parents('tr');
             $.ajax({

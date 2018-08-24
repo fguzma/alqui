@@ -46,21 +46,5 @@
             </div>
           </div> 
 
-          <div class="row">
-            <div class="col-md-2"></div>
-            <div class="col-md-4">
-              <div class="form-group">
-                {!!Form::label('Disponibilidad:')!!}
-                <div class="btn-group" data-toggle="buttons" name="opcion">
-                  <label class="btn btn-secondary active">
-                    <input type="radio" name="options" id="option1" autocomplete="off" checked value="SI"> SI
-                  </label>
-                  <label class="btn btn-secondary">
-                    <input type="radio" name="options" id="option2" autocomplete="off" value="NO"> NO
-                  </label>
-                </div>
-              </div>
-            </div>
-          </div> 
 
           

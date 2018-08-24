@@ -110,20 +110,28 @@
     {!!Html::script("js/jskevin/cedulanica.js")!!} 
     {!!Html::script("js/jskevin/tiposmensajes.js")!!} 
     {!!Html::script("https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js")!!} 
-    {!!Html::script("https://cdn.datatables.net/1.10.16/js/dataTables.bootstrap4.min.js")!!} 
+    {!!Html::script("https://cdn.datatables.net/1.10.16/js/dataTables.bootstrap4.min.js")!!}
+    {!!Html::script("js/jskevin/kavvdt.js")!!}   
     <script>
+    
+        var table;
+        var fila;
+        $(document).ready( function () {
+            table=createdt($('#Datos'),{buscar:'{!!session("valor")!!}',col:1,cant:[10,20,-1],cantT:[10,20,"Todo"]});
+            $("#main").css("visibility", "visible");
+        });
         function filtro()
         {
             if($("#tipofil").val()=="Cliente")
-                location.href ="https://alqui.herokuapp.com/vetado/cliente";
+                location.href ="/vetado/cliente";
             else
-                location.href ="https://alqui.herokuapp.com/vetado/personal/vetado.indexp";
+                location.href ="/vetado/personal/vetado.indexp";
         }
 
         function eliminar(cedu)
         {
             console.log("entro");
-            var ruta="https://alqui.herokuapp.com/vetado/"+cedu;
+            var ruta="/vetado/"+cedu;
             var token=$("#token").val();
             $.ajax({
                 url: ruta,
@@ -142,44 +150,9 @@
                 message(jqXHR,{tipo:"danger"});
             });
         }
-        var table;
-        var fila;
-        $(document).ready( function () {
-            table= $('#Datos').DataTable({
-                "pagingType": "full_numbers",
-                "order": [[ 1, "asc" ]],
-                "scrollX": true,
-                
-                "language": {
-                    "lengthMenu": "Mostrar _MENU_ registros",
-                    "zeroRecords": "No se encontro ningun registro",
-                    "info": "Pagina _PAGE_ de _PAGES_",
-                    "infoEmpty": "No hay registros",
-                    "infoFiltered": "(Filtrado entre _MAX_ total registro)",
-                    "loadingRecords": "Cargando...",
-                    "processing": "Procesando...",
-                    "search": "Buscar:",
-                    "paginate": {
-                        "first": "Primera",
-                        "last": "Ultima",
-                        "next": "Siguiente",
-                        "previous": "Anterior"
-                    },
-                    "aria": {
-                        "sortAscending":  ": activar para ordenar la columna ascendente",
-                        "sortDescending": ": activar para odenar la columna descendente"
-                    },
-                    "decimal": ".",
-                    "thousands": ","
-                },
-                "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "Todo"]],
-                
-            }).search('{!!session("valor")!!}').draw();
-            $("#main").css("visibility", "visible");
-        });
         $('.edit').on( 'click', function () {
             fila=$(this).parents('tr');//Dejamos almacenada temporalmente la fila en la que clickeamos editar
-            var ruta="https://alqui.herokuapp.com/descripcion/cliente/"+$(this).val();
+            var ruta="/descripcion/cliente/"+$(this).val();
             $.get(ruta,function(res)
             {
                 console.log(res);
@@ -193,7 +166,7 @@
         });
         function actualizar(cedula)
         {
-            route="https://alqui.herokuapp.com/vetado/"+$("#cedula").text();
+            route="/vetado/"+$("#cedula").text();
             var token=$("#token").val();
             $.ajax({
                 url: route,
@@ -212,7 +185,7 @@
         }
         $('.delete').on( 'click', function () {
             var row=$(this).parents('tr');
-            var route="https://alqui.herokuapp.com/vetado/"+$(this).val();
+            var route="/vetado/"+$(this).val();
             var token=$("#token").val();
             $.ajax({
                 url: route,

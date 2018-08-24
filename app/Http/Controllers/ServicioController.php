@@ -3,14 +3,10 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Http\Requests;
+use App\Servicio;
 use App\Http\Requests\ServicioAdd;
-use App\Http\Requests\PersonalUpdate;
-use App\servicio;
-use Redirect;
 use Session;
 use DB;
-
 class ServicioController extends Controller
 {
     public function __construct()
@@ -19,15 +15,15 @@ class ServicioController extends Controller
     }
     public function index($msj=null,$nombre="")
     { 
-        $servicios=servicio::all();
+        $servicios=Servicio::all();
         if($msj=="2")
         {
-            session::flash('message','servicio editado exitosamente');
+            session::flash('message','Servicio editado exitosamente');
             session::flash('tipo','info');
         }
         if($msj=="1")
         {
-            session::flash('message','servicio agregado exitosamente');
+            session::flash('message','Servicio agregado exitosamente');
             session::flash('tipo','info');
         }
         Session::flash('valor',$nombre);
@@ -35,7 +31,7 @@ class ServicioController extends Controller
     }
     public function store(ServicioAdd $request)
     { 
-        servicio::create([
+        Servicio::create([    
             'Nombre'=> $request['Nombre'],
         ]);
 
@@ -44,25 +40,21 @@ class ServicioController extends Controller
 
     public function destroy($id)
     {
-        $servicio=servicio::find($id);
+        $servicio=Servicio::find($id);
         $servicio->delete();
         return 1;
     }
     public function edit($id)
     {
-         $servicio=servicio::find($id);//DB::table('cliente')->where('Cedula_Cliente','=',$Cedula_Cliente)->get()
-         //dd($cliente->get(0));
-         //dd($cliente);
-         //return $cliente->Nombre;
+         $servicio=Servicio::find($id);
          return view('servicio.edit',['servicio'=>$servicio]);
-       // return Redirect::to('/editar');
     }
     public function update($id,Request $request)
     {
-        $servicio=servicio::find($id);
+        $servicio=Servicio::find($id);
         if($servicio['Nombre']!=$request['Nombre'])
         {
-            $consulta=servicio::where('Nombre','=',$request['Nombre'])->get();
+            $consulta=Servicio::where('Nombre','=',$request['Nombre'])->get();
             if(count($consulta)==0)
             {
                 $servicio->fill($request->all());
@@ -81,7 +73,7 @@ class ServicioController extends Controller
     }
     public function lista($value=null)
     {
-        $servicios=servicio::where('ID_Servicio','like','ID'.$value.'%')->paginate(10);
+        $servicios=Servicio::where('ID_Servicio','like','ID'.$value.'%')->paginate(10);
         return view('servicio.recargable.listaservicios',compact('servicios'));
     }
 }

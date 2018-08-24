@@ -4,11 +4,16 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-use App\reservacion;
-use App\descripcion;
-use App\servicio;
-use App\inventario;
-
+use App\Reservacion;
+use App\Descripcion;
+use App\Servicio;
+use App\Inventario;
+use App\Menu;
+use App\DesRe;
+use App\invenDes;
+use App\menudes;
+use App\Http\Requests\AddReserva;
+use DB;
 class ReservasController extends Controller
 {
     public function __construct()
@@ -17,107 +22,205 @@ class ReservasController extends Controller
     }
     public function index()
     {
-        $reservas=reservacion::paginate(10);
-        return view('reservacion.ver',compact('reservas'));
+        $reservas=Reservacion::all();
+        $descripcion=DB::Table('reservacion as re')
+        ->join('desres as dr','dr.idReservacion','=','re.ID_Reservacion')
+        ->join('descripcion as de','de.IdDescripcion','=','dr.idDescripcion')
+        ->Select('re.ID_Reservacion','de.Nombre','de.Cantidad','de.P_Unitario','de.Total')
+        ->where('re.deleted_at','=',null)
+        ->where('de.deleted_at','=',null)->get();
+        $des=[];
+        foreach($descripcion as $d)
+        {
+            if(array_key_exists($d->ID_Reservacion, $des))
+                array_push($des[$d->ID_Reservacion],$d);
+            else
+                $des[$d->ID_Reservacion]=[$d];
+        };
+        return view('reservacion.ver',compact('reservas','des'));
     }
     public function edit($id)
     {
-        $reservas=reservacion::find($id);
-        $des = \DB::table('descripcion')
-            ->select('descripcion.IdDescripcion','Nombre','Cantidad','P_Unitario','Total')
-            ->join('desres', 'descripcion.IdDescripcion', '=', 'desres.idDescripcion')
-            ->where('desres.idReservacion','=', $id)
-            ->get();
-        $servicios=servicio::all();
-        $inventario=inventario::all();
-        return view('reservacion.edit',['reservas'=>$reservas,'des'=>$des,'servicios'=>$servicios,'inventario'=>$inventario]);
-    }
-    public function update($id)
-    {
-        $Arreglo=[""];
-        $cadena=$request['puto'];
-        $pos=0;
-
-        for ($i=0; $i <strlen($cadena); $i++) {
-            if(strcmp($cadena[$i],',')===0)
+        $servicios=Servicio::all();
+        $menu=Menu::all();
+        $cliente=null;
+        $reservacion=Reservacion::find($id);
+        $inventario=Inventario::where('Costo_Alquiler','>',0)->get();
+        $desmenu=DB::Table('reservacion as re')
+            ->join('desres as dr','dr.idReservacion','=','re.ID_Reservacion')
+            ->join('descripcion as de','de.IdDescripcion','=','dr.idDescripcion')
+            ->join('menudes as md','md.id_descripcion','=','de.IdDescripcion')
+            ->join('menu as me','me.id','=','md.id_menu')
+            ->Select('me.id','de.Cantidad','me.descripcion','de.P_Unitario','de.Total')
+            ->where('re.ID_Reservacion','=',$id)
+            ->where('re.deleted_at','=',null)
+            ->where('de.deleted_at','=',null)->get();
+        //Devuelve lista de la cantidad de articulos reservados y el id del articulo en un rango de fecha
+        $inveres=DB::Table('reservacion as re')
+            ->join('desres as dr','dr.idReservacion','=','re.ID_Reservacion')
+            ->join('descripcion as de','de.IdDescripcion','=','dr.idDescripcion')
+            ->join('inven_descri as ind','ind.ID_Descripcion','=','de.idDescripcion')
+            ->join('inventario as in','in.ID_Objeto','=','ind.ID_Objeto')
+            ->Select('re.ID_Reservacion','in.ID_Objeto','de.Cantidad','de.Nombre','de.P_Unitario','de.Total')
+            ->whereBetween('Fecha_Inicio', [$reservacion->Fecha_Inicio, $reservacion->Fecha_Fin])//ingresar las fechas inicio y fin
+            ->where('re.deleted_at','=',null)
+            ->where('de.deleted_at','=',null)->get();
+        $ir=[];
+        $descripcion=[];
+        //convertimos la lista "inveres" en un arreglo y con la cantidad total a restar a cada articulo
+        foreach($inveres as $inR)
+        {
+            if(array_key_exists($inR->ID_Objeto, $ir))
+                $ir[$inR->ID_Objeto]+=$inR->Cantidad;
+            else
+                $ir[$inR->ID_Objeto]=$inR->Cantidad;
+            if($inR->ID_Reservacion==$id)
             {
-                $pos++;
-                array_push($Arreglo,"");
+                array_push($descripcion,$inR);
+            }
+        }
+        $articulo = view('reservacion.tablas.articulos',compact('inventario','ir'));
+        return view('reservacion.edit',compact('reservacion','servicios','menu','articulo','descripcion','desmenu'));
+    }
+    public function update(AddReserva $request,$id)
+    {
+        //actualizar datos de la reservacion
+        $Arreglo=$request['lista'];
+        $reservacion=Reservacion::find($id);
+        $reservacion['Cedula_Cliente']=$request['Cedula_Cliente'];
+        $reservacion['Nombre_Contacto']=$request['Nombre_Contacto'];
+        $reservacion['Fecha_Inicio']=$request['Fecha_Inicio'];
+        $reservacion['Fecha_Fin']=$request['Fecha_Fin'];
+        $reservacion['Direccion_Local']=$request['Direccion_Local'];
+        $reservacion['iva']=$Arreglo[count($Arreglo)-1][1];
+        $reservacion['rowfac']=$Arreglo[count($Arreglo)-1][3];
+
+        $now = new \DateTime();
+        //Obtenemos todas las descripciones de la reservacion
+        $desmenu=Descripcion::
+              join('desres as dr','descripcion.IdDescripcion','=','dr.idDescripcion')
+            ->join('menudes as md','md.id_descripcion','=','descripcion.IdDescripcion')
+            ->where('dr.idReservacion','=',$id)
+            ->where('md.deleted_at','=',null)
+            ->select('descripcion.*','md.id_menu')
+            ->get();
+        $desarti=Descripcion::
+              join('desres as dr','descripcion.IdDescripcion','=','dr.idDescripcion')
+            ->join('inven_descri as ind','ind.id_descripcion','=','descripcion.IdDescripcion')
+            ->where('dr.idReservacion','=',$id)
+            ->where('ind.deleted_at','=',null)
+            ->select('descripcion.*','ind.ID_Objeto')
+            ->get();
+            
+        $listamenu=[];
+        $listaarti=[];
+        foreach($desmenu as $dm)
+        {
+           $listamenu[$dm->id_menu]=$dm;
+           $listamenu[$dm->id_menu]->created_at=$now->format('Y-m-d H:i:s');
+           $listamenu[$dm->id_menu]->deleted_at=$now->format('Y-m-d H:i:s');
+           $listamenu[$dm->id_menu]->save();
+           unset($listamenu[$dm->id_menu]['id_menu']);
+        }
+        foreach($desarti as $da)
+        {
+           $listaarti[$da->ID_Objeto]=$da;
+           $listaarti[$da->ID_Objeto]->created_at=$now->format('Y-m-d H:i:s');
+           $listaarti[$da->ID_Objeto]->deleted_at=$now->format('Y-m-d H:i:s');
+           $listaarti[$da->ID_Objeto]->save();
+           unset($listaarti[$da->ID_Objeto]['ID_Objeto']);
+        }
+
+
+        //HACER RECORRIDO EN LAS DESCRIPCIONES A ACUALIZAR O EN LAS DESCRIPCIONES NUEVAS Y DEJAR COMO ELIMINADAS LAS INEXISTENTE
+        //Podria obtener todos los datos y luego recorrerlos con un ciclo considero que es menos tiempo que dos veces la misma consulta
+        //select a todos los elementos de la tabla descripcion asi podriamos actualizarlo directamente
+        
+        //Hacemos un recorrido en el arreglo que posee toda la descripcion de la factura para poder agregar cada unda de las descripciones
+        for($i=0;$i<(count($Arreglo)-1);$i++)//restamos 1 porque hay 1 fila de mas
+        {
+            $pk=substr($Arreglo[$i][5],0,-4);
+            if(substr($Arreglo[$i][5], -4)=="Arti")
+            {
+                if(array_key_exists($pk, $listaarti))
+                {
+                    $listaarti[$pk]->Cantidad=$Arreglo[$i][1];
+                    $listaarti[$pk]->Nombre=$Arreglo[$i][0]." - dias(".$Arreglo[$i][3].")";
+                    $listaarti[$pk]->P_Unitario=$Arreglo[$i][2];
+                    $listaarti[$pk]->Total=$Arreglo[$i][4];
+                    $listaarti[$pk]->deleted_at=null;
+                    $listaarti[$pk]->save();
+                }
+                else
+                {
+                    $des=Descripcion::create([
+                        'Cantidad'=> $Arreglo[$i][1],
+                        'Nombre'=>$Arreglo[$i][0]." - dias(".$Arreglo[$i][3].")",
+                        'P_Unitario'=>$Arreglo[$i][2],
+                        'Total'=>$Arreglo[$i][4],
+                    ]);
+                    DesRe::create([
+                        'idReservacion'=>$id,
+                        'idDescripcion'=>$des['IdDescripcion'],
+                    ]);
+                    invenDes::create([
+                        'ID_Objeto' => substr($Arreglo[$i][5],0,-4),
+                        'ID_Descripcion' => $des['IdDescripcion']
+                    ]); 
+                }
             }
             else
             {
-                $Arreglo[$pos]=$Arreglo[$pos].$cadena[$i];
+                if(array_key_exists($pk, $listamenu))
+                {
+                    $listamenu[$pk]->Cantidad=$Arreglo[$i][1];
+                    $listamenu[$pk]->Nombre=$Arreglo[$i][0]." - dias(".$Arreglo[$i][3].")";
+                    $listamenu[$pk]->P_Unitario=$Arreglo[$i][2];
+                    $listamenu[$pk]->Total=$Arreglo[$i][4];
+                    $listamenu[$pk]->deleted_at=null;
+                    $listamenu[$pk]->save();
+                }
+                else
+                {
+                    $des=Descripcion::create([
+                        'Cantidad'=> $Arreglo[$i][1],
+                        'Nombre'=>$Arreglo[$i][0]." - dias(".$Arreglo[$i][3].")",
+                        'P_Unitario'=>$Arreglo[$i][2],
+                        'Total'=>$Arreglo[$i][4],
+                    ]);
+                    DesRe::create([
+                        'idReservacion'=>$id,
+                        'idDescripcion'=>$des['IdDescripcion'],
+                    ]);
+                    menudes::create([
+                        'id_menu' => substr($Arreglo[$i][5],0,-4),
+                        'id_descripcion' => $des['IdDescripcion']
+                    ]); 
+                }
             }
         }
-        if(strcmp($request['accion'],"guarda")==0)
-        {
-            //Agregamos a la tabla reservacion
-            $reserva=reservacion::find($id);
-            $reserva->fill($request->all());
-            $reserva->save();
-
-            $reservacion=reservacion::all();
-            $reservacion=$reservacion->last();
-            $pos=0;
-            //Hacemos un recorrido en el arreglo que posee toda la descripcion de la factura para poder agregar cada unda de las descripciones
-            /*for($i=0;$i<(count($Arreglo)-4)/4;$i++)//restamos 4 porque hay 4 elementos de mas y dividimos entre la cantidad de columnas para q nos de la cantidad de fila
-            {
-                descripcion::create([
-                'Cantidad'=> $Arreglo[$pos+1],
-                'Nombre'=>$Arreglo[$pos],
-                'P_Unitario'=>$Arreglo[$pos+2],
-                'Total'=>$Arreglo[$pos+3],
-                ]);
-
-                $des=descripcion::all();
-                $des=$des->last();
-                $pos+=4;
-                desre::create([
-                    'idReservacion'=>$reservacion["ID_Reservacion"],
-                    'idDescripcion'=>$des['IdDescripcion'],
-                ]);
-            }*/
-            return redirect('/reservacion')->with('message',"Se agrego al trabajador correctamente");//view('personal.create',['message'=>"Se agrego al usuario exitosamente"]);
-        }
-        else
-        {/*
-            return $Arreglo;
-            $CC=$request['Cedula_Cliente'];
-            $NC=$request['Nombre_Contacto'];
-            $DL=($request['Direccion_Local']);
-            $FI=$request['Fecha_Inicio'];
-            $FF=$request['Fecha_Fin'];
-            */
-            /* return  $request['artifin'];
-                $view =  \View::make('reservacion.pdf', compact('CC', 'NC', 'DL','FI', 'FF'))->render();*/
-            //$pdf = \App::make('dompdf.wrapper');
-            // $pdf->loadHTML($view);
-            $pdf=PDF::loadView('reservacion.fac', compact('CC', 'NC', 'DL','FI', 'FF','Arreglo'));
-            return $pdf->stream('invoice.pdf');
-        }
-        $usuario=personal::find($cedula);
-        $usuario->fill($request->all());
-        $usuario->save();
-        return redirect('/personal')->with('message',"Se edito al trabajador exitosamente");//view('personal.create',['message'=>"Se agrego al usuario exitosamente"]);
+        $reservacion->save();
+        return 1;
+ 
     }
     public function lista($tipof=null,$valor=null)
     {
         if($tipof=="CC" && $valor!="no")
         {
-            $reservas=reservacion::where('Cedula_Cliente','like',$valor.'%')->get();
-            return view('reservacion.recargable.listareservas',compact('reservas'));
+            $reservas=Reservacion::where('Cedula_Cliente','like',$valor.'%')->get();
+            return view('Reservacion.recargable.listareservas',compact('reservas'));
         }
         if($tipof=="NC" && $valor!="no")
         {
-            $reservas=reservacion::where('Nombre_Contacto','like',$valor.'%')->get();
-            return view('reservacion.recargable.listareservas',compact('reservas'));
+            $reservas=Reservacion::where('Nombre_Contacto','like',$valor.'%')->get();
+            return view('Reservacion.recargable.listareservas',compact('reservas'));
         }
         if($tipof=="fechafac" && $valor!="no")
         {
-            $reservas=reservacion::whereBetween('created_at',['2017-10-21','2017-12-21'])->get();
-            return view('reservacion.recargable.listareservas',compact('reservas'));
+            $reservas=Reservacion::whereBetween('created_at',['2017-10-21','2017-12-21'])->get();
+            return view('Reservacion.recargable.listareservas',compact('reservas'));
         }
-        $reservas=reservacion::all();
-        return view('reservacion.recargable.listareservas',compact('reservas'));
+        $reservas=Reservacion::all();
+        return view('Reservacion.recargable.listareservas',compact('reservas'));
     }
 }

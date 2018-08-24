@@ -1,8 +1,9 @@
-<div class="list-group " id="list-tab" role="tablist" style="height:30em; overflow:scroll;">
-          <table class="table table-hover table-dark"  >
+
+          <table class="table table-hover table-dark" id="tablacargos" cellspacing="0" style="width:105%;" >
             <thead>
               <tr>
-                <th class="text-center">Cargo</th>
+                <th class="text-center" >Cargo</th>
+                <th class="text-center" data-orderable="false" ></th>
               </tr>
             </thead>
             <tbody>
@@ -16,4 +17,3 @@
               @endforeach
             </tbody>
           </table>
-        </div>

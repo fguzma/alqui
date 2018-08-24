@@ -6,13 +6,24 @@
     <div id="mensaje"></div>
     <form action="{{route('servicio.store')}}" method="POST" id="data">
 
-    <input type="hidden" name="_method" value="POST">
-    <input type="hidden" name="_token" value="{{ csrf_token() }}" id="token">
+      <input type="hidden" name="_method" value="POST">
+      <input type="hidden" name="_token" value="{{ csrf_token() }}" id="token">
+      <input type="text" style="display:none;">
     
-         @include('servicio.formulario.datos')
-         <input class="btn btn-primary" type="button" onclick="save('save');" value="Guardar">
-         <input class="btn btn-primary" type="button" onclick="save('savev');" value="Guardar y ver">
-        </form>
+      <div class="row ">
+        <div class="col-md-6">
+          <div class="form-group">
+              {!!Form::label('Nombre:')!!}
+              {!!Form::text('Nombre',null,['id'=>'nombre','class'=>'form-control','placeholder'=>'Nombre del servicio'])!!}
+          
+              <input type="text" style="display:none;">
+          </div>
+        </div>
+      </div>
+
+      <input class="btn btn-primary" type="button" onclick="save('save');" value="Guardar">
+      <input class="btn btn-primary" type="button" onclick="save('savev');" value="Guardar y ver">
+    </form>
   </div>
 </div>     
 @stop
@@ -21,7 +32,7 @@
   <script>
     function save(condition)
     {
-      var ruta="https://alqui.herokuapp.com/servicio";
+      var ruta="/servicio";
       var token=$("#token").val();
       $.ajax({
         url: ruta,
@@ -32,12 +43,12 @@
         success: function(result){
           if(condition=="save")
           {
-            message(["servicio agregado exitosamente"],{manual:true})
+            message(["Servicio agregado exitosamente"],{manual:true})
             $("#nombre").val("");
           }
           if(condition=="savev")
           {
-            location.href="https://alqui.herokuapp.com/serviciov/1/"+$("#nombre").val();
+            location.href="/serviciov/1/"+$("#nombre").val();
           }
         }
       }).fail( function( jqXHR, textStatus, errorThrown ) {

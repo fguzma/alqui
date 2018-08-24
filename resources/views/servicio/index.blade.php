@@ -41,6 +41,7 @@
                                 <div class="form-group">
                                     {!!Form::label('Nombre:')!!}
                                     {!!Form::text('Nombre',null,['id'=>'nombre','class'=>'form-control','placeholder'=>'Nombre del servicio'])!!}
+                                    <input type="text" style="display:none;">
                                 </div>
                             </div>
                         </div>
@@ -58,47 +59,19 @@
     {!!Html::script("https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js")!!} 
     {!!Html::script("https://cdn.datatables.net/1.10.16/js/dataTables.bootstrap4.min.js")!!} 
     {!!Html::script("js/jskevin/tiposmensajes.js")!!}  
+    {!!Html::script("js/jskevin/kavvdt.js")!!}   
     <script>
-        var fila;
+    
         var table;
+        var fila;
         $(document).ready( function () {
-            table= $('#Datos').DataTable({
-                "pagingType": "full_numbers",//botones primero, anterio,siguiente, ultimo y numeros
-                "order": [[ 0, "asc" ]],//ordenara por defecto en la columna Nombre de forma ascendente
-                "scrollX": true,//Scroll horizontal
-                
-                "language": {//Cambio de idioma al español
-                    "lengthMenu": "Mostrar _MENU_ registros",
-                    "zeroRecords": "No se encontro ningun registro",
-                    "info": "Pagina _PAGE_ de _PAGES_",
-                    "infoEmpty": "No hay registros",
-                    "infoFiltered": "(Filtrado entre _MAX_ total registro)",
-                    "loadingRecords": "Cargando...",
-                    "processing": "Procesando...",
-                    "search": "Buscar:",
-                    "paginate": {
-                        "first": "Primera",
-                        "last": "Ultima",
-                        "next": "Siguiente",
-                        "previous": "Anterior"
-                    },
-                    "aria": {
-                        "sortAscending":  ": activar para ordenar la columna ascendente",
-                        "sortDescending": ": activar para odenar la columna descendente"
-                    },
-                    //Especificamos como interpretara los puntos decimales y los cientos
-                    "decimal": ".",
-                    "thousands": ","
-                },
-                //Definimos la cantidad de registros que se podran mostrar
-                "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "Todo"]],
-            }).search('{!!session("valor")!!}').draw();
+            table=createdt($('#Datos'),{buscar:'{!!session("valor")!!}',cant:[10,20,-1],cantT:[10,20,"Todo"]});
             $("#main").css("visibility", "visible");
         });
         //Filtramos por el campo cedula    
         /*function filtro(val)
         {
-            var ruta="http://127.0.0.1:8080/filtroservicio/"+val.value;
+            var ruta="/filtroservicio/"+val.value;
             var token=$("#token").val();
             $.get(ruta, function(res){
                 $("#lista").empty();//Elimina la lista actual
@@ -116,7 +89,7 @@
         //Actualizacion de fila donde no es posible actualizar id
         function actualizar()
         {
-            route="http://127.0.0.1:8080/servicio/"+$("#id").val();
+            route="/servicio/"+$("#id").val();
             var token=$("#token").val();
             $.ajax({
                 url: route,
@@ -127,7 +100,7 @@
                 success: function(res){
                     if(res==1)
                     {
-                        message(['servicio editado correctamente'],{manual:true});
+                        message(['Servicio editado correctamente'],{manual:true});
                         table.cell(fila.children('td')[0]).data( $("#nombre").val());
                         table=$("#Datos").DataTable().draw();
                     }
@@ -141,7 +114,7 @@
             });
         }
         $('.delete').on( 'click', function () {
-            var route="http://127.0.0.1:8080/servicio/"+$(this).val();
+            var route="/servicio/"+$(this).val();
             var token=$("#token").val();
             var row=$(this).parents('tr');
             $.ajax({

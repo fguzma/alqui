@@ -3,25 +3,28 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\personal;
-use App\cliente;
-use App\vetado;
+use App\Vetado;
 use App\Http\Requests\VetadoAdd;
 use DB;
 
-class vetadocontroller extends Controller
+class VetadoController extends Controller
 {
+    
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
     public function index($tipo='cliente',$view="vetado.indexc",$cedu=null)
     {
         if($tipo=="cliente")
         {
-            $vetados=vetado::select('cliente.Nombre','cliente.Apellido','cliente.Cedula_Cliente','vetado.descripcion','vetado.ID_Vetado')
+            $vetados=Vetado::select('cliente.Nombre','cliente.Apellido','cliente.Cedula_Cliente','vetado.descripcion','vetado.ID_Vetado')
             ->join('cliente','cliente.Cedula_Cliente','=','vetado.IdCliente')
             ->where('IdCliente','like',$cedu.'%')->get();
         }
         if($tipo=="personal")
         {
-            $vetados=vetado::select('personal.Nombre','personal.Apellido','personal.Cedula_Personal','vetado.descripcion','vetado.ID_Vetado')
+            $vetados=Vetado::select('personal.Nombre','personal.Apellido','personal.Cedula_Personal','vetado.descripcion','vetado.ID_Vetado')
             ->join('personal','personal.Cedula_Personal','=','vetado.IdPersonal')
             ->where('IdPersonal','like',$cedu.'%')->get();
         }
@@ -35,27 +38,20 @@ class vetadocontroller extends Controller
     {
         
     }
-    public function edit($id)
-    {
-        /*$cliente=cliente::find($id);
-        return "que paso?";
-        return response()->json(
-            $cliente->toArray()
-        );*/
-    }
+
     public function update($cedu,request $datos)//Actualizar la descripcion del vetado
     {
         if($datos['descripcion']!="")
         {
             if($datos['tipo']=="cliente")
             {
-                $vetado=vetado::where('IdCliente','=',$cedu)->get();
+                $vetado=Vetado::where('IdCliente','=',$cedu)->get();
                 $vetado[0]['descripcion']=$datos['descripcion'];
                 $vetado[0]->save();
             }
             if($datos['tipo']=='personal')
             {
-                $vetado=vetado::where('IdPersonal','=',$cedu)->get();
+                $vetado=Vetado::where('IdPersonal','=',$cedu)->get();
                 $vetado[0]['descripcion']=$datos['descripcion'];
                 $vetado[0]->save();
             }
@@ -69,7 +65,7 @@ class vetadocontroller extends Controller
     public function listapersonal($view="vetado.createp")
     {
         $arreglo=[];
-        $personalvetado=vetado::where('IdPersonal','!=',null)->get();//obtenemos la lista de clientes vetados
+        $personalvetado=Vetado::where('IdPersonal','!=',null)->get();//obtenemos la lista de clientes vetados
         foreach($personalvetado as $pv)//recorremos la lista con el fin de:
         {
             array_push($arreglo,$pv['IdPersonal']);//almacenar las cedulas de clientes en un arreglo
@@ -83,7 +79,7 @@ class vetadocontroller extends Controller
     public function listacliente($view="vetado.createc")
     {
         $arreglo=[];
-        $clientevetado=vetado::where('IdCliente','!=',null)->get();//obtenemos la lista de clientes vetados
+        $clientevetado=Vetado::where('IdCliente','!=',null)->get();//obtenemos la lista de clientes vetados
         foreach($clientevetado as $cv)//recorremos la lista con el fin de:
         {
             array_push($arreglo,$cv['IdCliente']);//almacenar las cedulas de clientes en un arreglo
@@ -99,10 +95,10 @@ class vetadocontroller extends Controller
         if($datos->get("tipo")=="cliente")
         {
 
-            $consulta=vetado::where('IdCliente','=',$datos->get("La_cedula_del_cliente"))->orwhere('IdPersonal','=',$datos->get("La_cedula_del_cliente"))->get();
+            $consulta=Vetado::where('IdCliente','=',$datos->get("La_cedula_del_cliente"))->orwhere('IdPersonal','=',$datos->get("La_cedula_del_cliente"))->get();
             if(count($consulta)==0)
             {
-                vetado::create([
+                Vetado::create([
                     'IdPersonal'=>null,
                     'IdCliente'=>$datos->get("La_cedula_del_cliente"),
                     'descripcion'=>"Cliente: ".$datos->get("descripcion"),
@@ -119,11 +115,11 @@ class vetadocontroller extends Controller
         }
         else
         {
-            $consulta=vetado::where('IdCliente','=',$datos->get("La_cedula_del_personal"))->orwhere('IdPersonal','=',$datos->get("La_cedula_del_personal"))->get();
+            $consulta=Vetado::where('IdCliente','=',$datos->get("La_cedula_del_personal"))->orwhere('IdPersonal','=',$datos->get("La_cedula_del_personal"))->get();
             /*return $consulta[0]['descripcion'];*/
             if(count($consulta)==0)
             {
-                vetado::create([
+                Vetado::create([
                     'IdPersonal'=>$datos->get("La_cedula_del_personal"),
                     'IdCliente'=>null,
                     'descripcion'=>"Personal: ".$datos->get("descripcion"),
@@ -145,13 +141,13 @@ class vetadocontroller extends Controller
     {
         if($tipo=="cliente")
         {
-            $vetado=vetado::select('cliente.Nombre','cliente.Apellido','cliente.Cedula_Cliente','cliente.Edad','cliente.Sexo','vetado.descripcion','vetado.ID_Vetado')
+            $vetado=Vetado::select('cliente.Nombre','cliente.Apellido','cliente.Cedula_Cliente','cliente.Edad','cliente.Sexo','vetado.descripcion','vetado.ID_Vetado')
             ->join('cliente','cliente.Cedula_Cliente','=','vetado.IdCliente')
             ->where('IdCliente','=',$cedu)->get();
         }
         if($tipo=="personal")
         {
-            $vetado=vetado::select('personal.Nombre','personal.Apellido','personal.Cedula_Personal','personal.Direccion','personal.Fecha_Nac','vetado.descripcion','vetado.ID_Vetado')
+            $vetado=Vetado::select('personal.Nombre','personal.Apellido','personal.Cedula_Personal','personal.Direccion','personal.Fecha_Nac','vetado.descripcion','vetado.ID_Vetado')
             ->join('personal','personal.Cedula_Personal','=','vetado.IdPersonal')
             ->where('IdPersonal','=',$cedu)->get();
         }
@@ -161,12 +157,12 @@ class vetadocontroller extends Controller
     {
         if($datos['tipo']=='cliente')
         {
-            $vetado=vetado::where('IdCliente','=',$cedu)->get();
+            $vetado=Vetado::where('IdCliente','=',$cedu)->get();
             $vetado[0]->delete();
         }
         if($datos['tipo']=='personal')
         {
-            $vetado=vetado::where('IdPersonal','=',$cedu)->get();
+            $vetado=Vetado::where('IdPersonal','=',$cedu)->get();
             $vetado[0]->delete();
         }
         return 1;

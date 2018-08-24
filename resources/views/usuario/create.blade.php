@@ -13,7 +13,7 @@
           <div class="col-md-6 ">
             <div class="form-group text-center">
                 {!!Form::label('Correo:')!!}
-                {!!Form::text('correo',null,['id'=>'Correo','class'=>'form-control','placeholder'=>'ejemplo@hotmail.com','onkeyup'=>'existe("2");','autocomplete'=>'off'])!!}
+                {!!Form::text('correo',null,['id'=>'Correo','class'=>'form-control','placeholder'=>'ejemplo@hotmail.com','autocomplete'=>'off'])!!}
                 <spam id="msjemail" style="color:red;"></spam> 
             </div>
           </div>
@@ -72,12 +72,12 @@
           }
         }
     }
-    function existe(decision)
+/*     function existe(decision)
     {
-      /*validacion para el usuario*/
+      //validacion para el usuario
       if(decision==1)
       {
-        var ruta="https://alqui.herokuapp.com/userexist/"+$("#usuario").val()+"/"+decision;
+        var ruta="/userexist/"+$("#usuario").val()+"/"+decision;
         if($("#usuario").val()!="")
         {
           $.get(ruta, function(res){
@@ -89,10 +89,10 @@
         }
       }
 
-      /*validacion para el correo*/
+      //validacion para el correo
       if(decision==2)
       {
-        var ruta="https://alqui.herokuapp.com/userexist/"+$("#Correo").val()+"/"+decision;
+        var ruta="/userexist/"+$("#Correo").val()+"/"+decision;
         if($("#correo").val()!="")
         {
           $.get(ruta, function(res){
@@ -103,10 +103,10 @@
           });
         }
       }
-    }
+    } */
     function save(condition)
     {
-      var ruta="https://alqui.herokuapp.com/usuario";
+      var ruta="/usuario";
       var token=$("#token").val();
       $.ajax({
         url: ruta,
@@ -124,7 +124,7 @@
             }
             if(condition=="savev")
             {
-              location.href="https://alqui.herokuapp.com/usuariov/1/"+$("#Correo").val();
+              location.href="/usuariov/1/"+$("#Correo").val();
             }
           }
           else

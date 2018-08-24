@@ -1,145 +1,257 @@
-$(document).ready(function(){
-   /* var tabladatos=$("#datos");
-    var route="http://localhost:8080/add";
-    
-    $.get(route,function(res){
-        $(res).each(function(key,value){
-            tabladatos.append("<tr><td>"+value.Nombre+"</td><td><button value="+value.id+" OnClick='Mostrar(this);' class='btn btn-primary'>")
-        });
-    });*/
+var Farticulo;
+var A;
+var facturas;
+function mostrar(btn)
+{
+    Farticulo=btn.parentNode.parentNode;//Guardamos la fila seleccionada "<tr>"
+    $("#cant").val("");
+    $("#precio").val(Tarti.row(Farticulo).data()[2]);//Escribimos el valor por defecto
+}
+
+$('#Add').on('shown.bs.modal', function (e) {
+    $("#cant").select();
 });
-var item;
-$(".mostrar").on('click',function(){
-    item=$(this).parent('td').parent('tr');
-    $("#id").val($(this).val());
-
-/*    var route="http://127.0.0.1:8080/reservacion/"+$(this).val()+"/edit";
-    //revisar esto... si ya tengo el id ... es necesario enviarlo para que me lo devuelva el objeto en este momento?
-    $.get(route, function(res){
-        $("#id").val(res.ID_Objeto);
-    });*/
- 
-
-});
-
-
-$("#anadir").click(function(){//cantidadoriginal, cantidad ingresada,"fila",modal
-    var cantidadOr=item.children('td[class="can"]').text()*1;
-    if($("#cant").val()*1>0 && $("#cant").val()*1<=cantidadOr)
+function AddToListArticulo()
+{
+    var articulo = Tarti.row(Farticulo).data();//Guardamos los datos de  la fila
+    var cantidadOr=articulo[1];//Cantidad original
+    var cantAdd=$("#cant").val()*1;//Cantidad a agregar
+    if(cantAdd>0 && cantAdd<=cantidadOr && $("#manual").prop('checked')==false)//validamos el no agregar mas que la existencia
     {
-        
-        $("#Add").modal('toggle');
-        item.children('td[class="can"]').text((cantidadOr)-($("#cant").val()*1));
-        var id=$("#id").val();
-        var tabla=$("#articuloren");
-        var cant=$("#cant").val()*1;
-        if(tabla.children('tr[id="'+ id +'"]').length!=0)
+        $("#Add").modal('toggle');//ocultamos el modal
+        //Actualizamos la cantidad total del articulo
+        Tarti.cell(Farticulo.children[1]).data((cantidadOr)-(cantAdd));
+        var id=Farticulo.children[3].children[0].value;
+        AddToList({Tabla:TA,articulo:articulo,cantAdd:cantAdd,id:id});
+        location.href="#TablaA";
+    }
+    else
+    {
+        console.log(cantAdd);
+        if(cantAdd=="" && $("#manual").prop('checked')==false)
+            message(["No ha ingresado la cantidad"],{objeto:$("#mensajearticulo"),tipo:"danger",manual:true}); 
+        else
         {
-            
-            cant+= tabla.children('tr[id="'+ id +'"]').children('td[class="itemaddcant"]').text()*1;
-            tabla.children('tr[id="'+ id +'"]').empty();
-            tabla.children('tr[id="'+ id +'"]').append("<td>"+item.children('td[class="itemname sorting_1"]').text()+"</td><td class=\"itemaddcant\">"+cant+"</td><td>"+item.children('td[class="cost"]').text()+"</td><td>"+$("#dias").val()+"</td><td> "+(cant*(item.children('td[class="cost"]').text()*1)*$("#dias").val())+"</td><td><button value="+id+" OnClick='Eliminar(this);' class='btn btn-danger'>Eliminar</button></td>");
+            if($("#precio").val() == "")
+                message(["No ha ingresado el precio"],{objeto:$("#mensajearticulo"),tipo:"danger",manual:true}); 
+            else
+            {
+                if(cantAdd>cantidadOr && $("#manual").prop('checked')==false)
+                    message(["Sobre pasa la cantidad existente"],{objeto:$("#mensajearticulo"),tipo:"danger",manual:true});
+                else
+                {
+                    $("#Add").modal('toggle');//ocultamos el modal
+                    //Actualizamos la cantidad total del articulo
+                    Tarti.cell(Farticulo.children[1]).data((cantidadOr)-(cantAdd));
+                    var id=Farticulo.children[3].children[0].value;
+                    articulo[2]=$("#precio").val();
+                    AddToList({Tabla:TA,articulo:articulo,cantAdd:cantAdd,id:id});
+                    location.href="#TablaA";
+                }
+            }
+        }
+    }
+}
 
+function AddToList({Tabla=null,articulo=null,cantAdd=null,indexname=0,tipo='Arti',id=""}={})
+{
+    //verificamos si ya fue agregado el articulo
+    if(TA.cell('td[id='+articulo["DT_RowId"]+']').length>0)
+    {
+        //sumamos la cantidad agregada anteriormente con la actual
+        var cantidad= TA.cell('td[id='+articulo["DT_RowId"]+']').data()*1 + cantAdd;//SOLO cantAdd si no quisiera sumar lo previo agregado
+        var indexrow=TA.cell('td[id='+articulo["DT_RowId"]+']').index().row;
+        var costo=articulo[2];//TA.cell(indexrow,2).data();
+        TA.cell(indexrow,1).data(cantidad);//Agregamos la nueva cantidad
+        TA.cell(indexrow,2).data(costo);//Agregamos el precio
+        TA.cell(indexrow,4).data(costo*diff*cantidad);
+    }
+    else
+    {
+        //Agregar la fila
+        var newrow = TA.row.add(
+        [
+            articulo[indexname],
+            cantAdd,
+            articulo[2],
+            $("#dias").val(),
+            cantAdd*($("#dias").val()*1)*articulo[2],
+            '<button onclick="EraseRow({boton: this,pos:\''+articulo["DT_RowId"]+'\',tipo:\''+tipo+'\'});" value="'+id+tipo+'"class="btn btn-danger">Eliminar</button>'
+        ]).draw().node();
+        newrow.children[1].id=articulo["DT_RowId"];//Agregamos la clase para la columna de cantidad
+        newrow.children[3].className="day";
+    }
+}
+
+function EraseRow({boton=null,pos=null,tipo=""}={})
+{
+    deletedrow=TA.row(boton.parentNode.parentNode);
+    if(tipo!="Menu")
+    {
+        valororiginal=Tarti.cell('td[id=c_'+pos+']').data()*1 + deletedrow.data()[1]*1;
+        Tarti.cell('td[id=c_'+pos+']').data(valororiginal);
+    }
+    deletedrow.remove().draw( false ); 
+}
+
+function AddToListMenu(boton)
+{
+    console.log(boton.value);
+    if($("#c_menucant"+boton.value).val()*1)
+    {
+        var articulo = table.row(boton.parentNode.parentNode).data();//Guardamos los datos de  la fila
+        var cantAdd=$("#c_menucant"+boton.value).val()*1;//Cantidad a agregar
+        AddToList({Tabla:table,articulo:articulo,cantAdd:cantAdd,indexname:1,tipo:"Menu",id:boton.value});
+        $("#c_menucant"+boton.value).val("");
+        message(["Se agrego a la lista"],{objeto:$("#mensajemenu"), manual:true});
+        location.href="#mensajemenu";
+    }
+}
+
+function Eliminar(btn, menu=false)
+{  
+        if(menu!=false)
+        {
+            var cantoriginal=$("#tablaarticulos").children('tr[id="'+ btn.value +'"]').children('td[class="can"]');
+            var cantagregada=$("#articuloren").children('tr[id="'+ btn.value +'"]').children('td[class="itemaddcant"]').text()*1;
+            cantoriginal.text((cantoriginal.text()*1)+(cantagregada));
+            $("#articuloren").children('tr[id="'+ btn.value +'"]').remove();
         }
         else
-            tabla.append("<tr id=\""+id+"\"><td>"+item.children('td[class="itemname sorting_1"]').text()+"</td><td class=\"itemaddcant\">"+cant+"</td><td>"+item.children('td[class="cost"]').text()+"</td><td>"+$("#dias").val()+"</td><td> "+(cant*(item.children('td[class="cost"]').text()*1)*$("#dias").val())+"</td><td><button value="+id+" OnClick='Eliminar(this);' class='btn btn-danger'>Eliminar</button></td></tr>");
-        
-        
-        location.href="#TablaA";
-
-        //se envia el id del item para adquirir todos sus atributos
-        /*var id=$("#id").val();
-        var tabla=$("#articuloren");
-        var cant=$("#cant").val();
-        var route="http://127.0.0.1:8080/reservacion/"+id+"/edit";
-        var token=$("#token").val();
-        $.ajax({
-            url: route,
-            headers:{'X-CSRF-TOKEN': token},
-            type: 'GET',
-            dataType: 'json',
-            success: function(){
-                console.log("entro");
-                $("#Add").modal('toggle');
-                $("#TablaA").show();
-                cantidadOr.text((cantidadOr.text()*1)-($("#cant").val()*1));
-                location.href="#TablaA";
-                agregar();
-            }
-        });*/
-    }
-});
-function agregar()
-{
-    $("#articuloren").append("<tr id=\""+"1"+"\"><td>"+$("#Enombre").val()+"</td><td class=\"itemaddcant\">"+$("#Ecantidad").val()+"</td><td>"+$("#Ecost").val()+"</td><td>"+$("#dias").val()+"</td><td> "+($("#Ecantidad").val()*($("#Ecost").val()*1)*$("#dias").val())+"</td><td><button value="+"1"+" OnClick='Eliminar(this);' class='btn btn-danger'>Eliminar</button></td></tr>");
-}
-$(".reser").click(function(){
-    $("#cant").val("");
-});
-
-function Eliminar(btn)
-{  
-        var cantoriginal=$("#tablaarticulos").children('tr[id="'+ btn.value +'"]').children('td[class="can"]');
-        var cantagregada=$("#articuloren").children('tr[id="'+ btn.value +'"]').children('td[class="itemaddcant"]').text()*1;
-        cantoriginal.text((cantoriginal.text()*1)+(cantagregada));
-        $("#articuloren").children('tr[id="'+ btn.value +'"]').remove();
+            $("#articuloren").children('tr[id="'+ btn.value +'"]').remove();
        // document.getElementById("tableid").deleteRow(i);
 }
 function Enviar()
 {
     var f = new Date();
     var meses = new Array ("Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre");
-    var cantc=1;
-    var pago=0;
-    var lce=$("#lce").text($("#Cedu").val());
-    var lnom=$("#lnom").text($("#Nom").val());
-    var ldir=$("#ldir").text($("#Dir").val());
-    var lfi=$("#lfi").text($("#datepicker").val());
-    var lff=$("#lff").text($("#datepicker2").val());
-    var lf=$("#lf").text("Fecha: "+f.getDate() + " de " + (meses[f.getMonth()]) + " de " + f.getFullYear());
-    var pos=0;
-    var A=new Array();
-    $("#artifin").empty();
-//TABLA DE ARTICULOS SOLICITADOS
-    $("#artifin").append("<tr>");
-    $("#articuloren tr td").each(function(){
-        /*Si es el boton de eliminar que no lo replique*/
-        if($(this).text()!="Eliminar")
-        {
-            $("#artifin").append("<td>"+ $(this).text()+ "</td>");
-            A[pos]=$(this).text();
-            pos++;
-        }
-        cantc++;
-        if(cantc>$("#TablaA th").length)
-        {
-            pago+=parseInt($(this).text());
-            $("#artifin").append("</tr><tr>");
-            cantc=0;
-        }
-    });
-    A[pos]=pago;
-    /*asumiendo que si tiene IVA, cree que sea necesario A[pos+1]? simbolizando el valor del iva*/ 
-    A[pos+1]=0;//pago*0.15;
-    A[pos+2]=0;//pago+(pago*0.15);
-    A[pos+3]="Fecha: "+f.getDate() + " de " + (meses[f.getMonth()]) + " de " + f.getFullYear();
-    $("#arre").val(A);
-    console.log($("#arre").val());
-
-    $("#artifin").append("</tr>"+
-                            /*"<tr><td> </td><td> </td><td><b>Sub Total:</b></td><td>"+pago+"</td></tr>"+
-                            "<tr><td> </td><td> </td><td><b>IVA:</b></td><td>"+(pago*0.15)+"</td></tr>"+*/
-                            '<tr><td> </td><td> </td><td><b>Gran Total:</b></td><td style="text-align: center">'+pago+'</td></tr>');
-
-    CambioPag();
     
-/*$("#tablaB").submit();
-console.log(lf);
-    $("#F").text(lf);
-    $("#NC").text(lnom);
-    $("#D").text(ldir);
-    $("#FI").text(lfi);
-    $("#FF").text(lff);*/
+    $("#lce").text($("#Cedu").val());
+    $("#lnom").text($("#Nom").val());
+    $("#ldir").text($("#Dir").val());
+    $("#lfi").text($("#datepicker").val());
+    $("#lff").text($("#datepicker2").val());
+    var lf=$("#lf").text("Fecha: "+f.getDate() + " de " + (meses[f.getMonth()]) + " de " + f.getFullYear());
+
+    if($("#filafactura").val()=="")
+        $("#filafactura").val(TA.data().length);
+    if($("#filafactura").val()!=0)
+    {
+        tablafactura();
+        A[A.length-1][2]=lf.text();
+    }
+    CambioPag();
+}
+
+
+function tablafactura()
+{
+    $("#artifin").empty();
+    filafac=$("#filafactura").val()*1;
+    if(filafac>0)
+    {
+        A= [[]];
+        aux=filafac;
+        cantfac=0;
+        var i=0;
+        facturas=[[""]];
+        html="";
+        var pago=0;
+        for(i=0; i<TA.data().length; i++)//se repetira hasta la cantidad maxima de filas en las facturas
+        {
+            if(i==filafac)
+            {
+                facturas.push(['']);
+                filafac+=aux;
+            }
+            A[i].push(
+                TA.row(i).data()[0],
+                TA.row(i).data()[1],
+                TA.row(i).data()[2],
+                TA.row(i).data()[3],
+                TA.row(i).data()[4],
+                TA.row(i).node().children[5].children[0].value
+            );
+            html+=
+                '<tr>'+
+                    '<td>'+(A[i][0])+'</td>'+
+                    '<td>'+(A[i][1])+'</td>'+
+                    '<td>'+(A[i][2])+'</td>'+
+                    '<td>'+(A[i][3])+'</td>'+
+                    '<td>'+(A[i][4])+'</td>'+
+                '</tr>';
+            pago+=parseInt(TA.row(i).data()[4]);
+            A.push([]);
+            if(i==filafac-1)//Si es la ultima linea definida por factura
+            {
+                facturas[cantfac][0]=html;
+                facturas[cantfac].push(pago);
+                cantfac++;
+                pago=0;
+                html="";
+            }  
+        }
+        if(i<filafac)
+        {
+            for(;i<filafac; i++)
+                html+='<tr><td></td><td></td><td></td><td></td><td></td></tr>';
+                
+            facturas[cantfac][0]=html;
+            facturas[cantfac].push(pago);
+        }
+        $("#artifin").append(facturas[0][0]);
+        A[A.length-1].push(pago,0,$("#lf").text(),aux);
+        facactual=0;
+        $("#numfac").text("Factura #1");
+        $("#numfac").text("Factura #1");
+        $("#facactual").val(0);
+        eliminardetalles();
+    }
+    
+}
+
+//Elimina las filas subtota, iva y total segun convenga
+function eliminardetalles(pos=0)
+{
+    var x = $("#artifin");
+    var pago=0;
+    
+    if($("#iva").prop('checked')==false)//si no esta aprovado el uso de iva
+    {
+        x.children('tr[id]').remove();//removemos todas las filas con id (son maximo 3 de esa tabla)
+        pago=facturas[pos][1];//A[A.length-1][0];//almacenamos el valor del pago total
+        ultimodetalle(pago,0);//funcion que agregar a la tabla el subtotal, iva y total segun convenga (pago,iva,valoriva)
+    }
+    else
+    {
+        valor=($("#valoriva").val()*1)/100;//obtenemos el valor del iva a aplicar 
+        if(valor!=0)//si el valor ingresado es 0 o no se ingreso un valor no ocurrira nada
+        {
+            x.children('tr[id]').remove();
+            pago=facturas[pos][1];//A[A.length-1][0];
+            ultimodetalle(pago,valor);
+        }
+    }
+}
+//IMPLEMENTAR EL IVA
+function ultimodetalle(pago,iva)
+{
+    if(iva==0)
+    {
+        $("#artifin").append("</tr >"+
+            '<tr id="tftotal"><td> </td><td> </td><td></td><td><b>Gran Total:</b></td><td>'+pago+'</td></tr>');
+        A[A.length-1][1]=0;
+    }
+    else
+    {
+        $("#artifin").append("</tr >"+
+            '<tr id="tfsubtotal"> <td></td> <td></td> <td></td> <td> <b>Sub Total:</b></td><td>'+pago+'</td> </tr>'+
+            '<tr id="tfiva"> <td></td> <td></td> <td> </td><td><b>IVA:</b></td><td>'+(pago*iva).toFixed(2)+'</td> </tr>'+
+            '<tr id="tftotal"> <td></td> <td></td> <td> </td><td><b>Gran Total:</b></td><td>'+(pago+(pago*iva)).toFixed(2)+'</td> </tr>');
+        
+        A[A.length-1][1]=iva;
+    }
+    $("#arre").val(A);
 }
 function CambioPag()
 {
@@ -155,24 +267,18 @@ function CambioPag()
     }
 }
 
-$("#impri").click(function(){
-
-    var route="https://alqui.herokuapp.com/pdf";
-    
-    var token=$("#token").val();
-
-    $.ajax({
-        url: route,
-        headers:{'X-CSRF-TOKEN': token},
-        type: 'GET',
-        dataType: 'json',
-    });
-});
-function Imprimir(btn)
+facactual=0;
+function cambiofac(valor)
 {
-    $("#ac").val(btn);
-    if(btn=="imprimir")
-        $('#formulario').attr('target','_BLANK');
-    else
-        $('#formulario').removeAttr('target');
+    temp=facactual+valor*1;
+    if(temp>=0 && temp<facturas.length)
+    {
+        facactual=temp;
+        tf=$("#artifin");
+        tf.empty();
+        tf.append(facturas[facactual][0]);
+        eliminardetalles(facactual);
+        $("#numfac").text("Factura #"+(facactual+1));
+        $("#facactual").val(facactual);
+    }
 }

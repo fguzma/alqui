@@ -3,11 +3,10 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\cargo;
+use App\Cargo;
 use App\cargo_personal;
 use App\personal;
 use App\Http\Requests\CargoAdd;
-use Redirect;
 use Session;
 
 class CargosController extends Controller
@@ -16,9 +15,10 @@ class CargosController extends Controller
     {
         $this->middleware('auth');
     }
+    //Muestra todos los cargos
     public function index($msj=null,$nombre="")
     {
-        $cargos=cargo::all();
+        $cargos=Cargo::all();
         if($msj=="2")
         {
             session::flash('message','Cargo editado exitosamente');
@@ -32,20 +32,25 @@ class CargosController extends Controller
         Session::flash('valor',$nombre);
         return view('cargo.index',compact('cargos'));
     }
+    //Muestra la vista de crear
     public function create()
     {
-        $Cargos=cargo::all();
+        $Cargos=Cargo::all();
         $personal=personal::all();
         return view("cargo.create", compact('Cargos','personal'));
     }
+    //Crea un nuevo cargo
     public function store(CargoAdd $request)
     {
-        cargo::create([
+        $consulta= Cargo::where('Nombre_Cargo','=',$request['Nombre_Cargo'])->Where('deleted_at','=',null)->get();
+        if(count($consulta)>0)
+            return 0;
+        Cargo::create([
             'Nombre_Cargo'=>$request['Nombre_Cargo'],
         ]);
-        session::flash('message','El cargo se ha guardado correctamente');
         return 1;
     }
+    //Asigna cargos a los empleados indivualmente o en grupo
     public function guardar( Request $listapersonal)
     {
         $cadena="";
@@ -77,29 +82,26 @@ class CargosController extends Controller
         else
             return 1;
     }
+    //Retorna la lista de cargos
     public function recargarlista()
     {
-        $Cargos=cargo::all();
+        $Cargos=Cargo::all();
         return view('cargo.listacargo.listacargo',compact('Cargos'));
     }
+    //Elimina cargo
     public function destroy($id)
     {
-        $cargo=cargo::find($id);
+        $cargo=Cargo::find($id);
         $cargo->delete();
         return 1;
-
     }
-    public function edit($id)
-    {
-        $cargo=cargo::find($id);
-        return view('cargo.edit',compact('cargo'));
-    }
+    //Actualiza cargo
     public function update($id,CargoAdd $request)
     {
-        $cargo=cargo::find($id);
+        $cargo=Cargo::find($id);
         if($cargo['Nombre_Cargo']!=$request['Nombre_Cargo'])
         {
-            $consulta=cargo::where('Nombre_Cargo','=',$request['Nombre_Cargo'])->get();
+            $consulta=Cargo::where('Nombre_Cargo','=',$request['Nombre_Cargo'])->get();
             if(count($consulta)==0)
             {
                 $cargo->fill($request->all());
@@ -112,9 +114,5 @@ class CargosController extends Controller
         }
         return 1;
     }
-    public function lista($value=null)
-    {
-        $cargos=cargo::where('Nombre_Cargo','like',$value.'%')->paginate(10);
-        return view('cargo.listacargo.listacindex',compact('cargos'));
-    }
+
 }

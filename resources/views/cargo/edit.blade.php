@@ -8,7 +8,7 @@
             <div class="row ">
                 <div class="col-md-6">
                     <div class="form-group">
-                        {!!Form::label('cargo')!!}
+                        {!!Form::label('Nombre del Cargo:')!!}
                         {!!Form::text('Nombre_Cargo',null,['id'=>'Nom', 'class'=>'form-control','placeholder'=>'ej: Conductor'])!!}
                     </div>
                 </div>

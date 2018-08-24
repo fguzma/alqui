@@ -4,7 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-class cliente extends Model
+class Cliente extends Model
 {
     protected $table='cliente';
     public $primaryKey ='Cedula_Cliente';
@@ -17,7 +17,7 @@ class cliente extends Model
      * @var array
      */
     protected $fillable = [
-        'Cedula_Cliente', 'Nombre','Apellido','Edad','Sexo',
+        'Cedula_Cliente', 'Nombre','Apellido','Edad','Sexo','Direccion',
     ];
 
     /**

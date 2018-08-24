@@ -1,90 +1,55 @@
-var nica=true;
-function cedulanica(e,campo)
+var nica=false;
+var edad=0,year=0,month=0,day=0;
+function CharCedula(e,campo)
 {
-    //importante "evaluamos siempre mediante la longitud del campo"
-    var pos=campo.value.length;
     var cedula=campo.value;
-    var keynum = (document.all) ? e.keyCode : e.which;; 
-    //console.log(pos);
-    if(keynum!=8 && nica!=false)
+    var keynum = (document.all) ? e.keyCode : e.which;; //No se la dvd
+    if($("#nacional").prop('checked')==true)//Si es idenficacion Nica
     {
-        //console.log(pos);
-        if(pos==3 || pos==10)//las posiciones donde van las "-"
+        if( cedula.length<14)//Permitir un maximo de 15 caracteres
         {
-        campo.value=campo.value+"-";
+            //Rango de caracteres permitidos diferentes a numeros
+            if ((((keynum>64 && keynum<91) || (keynum>96 && keynum<123) || (keynum>47 && keynum<10)) && keynum!=8))
+            return true;//se escribe
         }
-        if(nica==true && pos>15)//Seccion de codigo para quitar los guiones de la cedula
-        {
-        var ce="";
-        for(var i=0; i<pos; i++)
-        {
-            if(cedula[i]!="-")
-            {
-            ce+=cedula[i];
-            }
-        }
-        campo.value=ce;
-        nica=false;
-        //console.log(nica);
-        }
+        else
+            return false;//No se escribe
+        return /\d/.test(String.fromCharCode(keynum));//Solo escribe numeros
     }
-    //console.log(nica);   
-    if(keynum==8)//si preciono la tecla borrar/retroceso
-    {
-        //console.log(cedula.substr(3,1));
-        campo.value=cedula.substr(0,(cedula.length-1));
-    }
-    //console.log(keynum);
-    //validacion para las teclas que no son permitidas
-    if ((((keynum>64 && keynum<91) || (keynum>96 && keynum<123) || (keynum>47 && keynum<10)) && keynum!=8))
-    return true;
-
-    return /\d/.test(String.fromCharCode(keynum));
 }
-/*VULNERABLE Si no suelto la tecla de borrar no se pondra el formato nica*/ 
 function formatonica(campo)
 {
-    /*Si la cedula no era nica y entra nuevamente a los rangos de la cedula nica, se ponen los guiones*/
-    var cedula=campo.value;
-    var pos=campo.value.length;
-    //console.log(pos);
-    if(nica==false && pos==14 )
+    if($("#nacional").prop('checked')==true)//Si es idenficacion Nica
     {
-        //console.log("menor y falso");
-        nica=true;
-        var ce="";
-        for(var i=0; i<pos; i++)
+        cedula=campo.value;//texto del campo cedula
+        if(cedula.length <16 && nica==true)//si es menor a la cantidad de 16 char y tiene aplicado el formato nica
         {
-        if(i==3 || i==9)
-            ce+="-"+cedula[i];
-        else
-            ce+=cedula[i];
+            var temp="";
+            for(i=0; i<cedula.length; i++)//recorremos el string para quitar los guiones
+            {
+                if(cedula[i]!="-")
+                    temp+=cedula[i];
+            }
+            campo.value=temp;//escribimos en el campo
+            nica=false;//formato nica false
+            edad=year=month=day=0;
         }
-        campo.value=ce;
+        if( cedula.length==14)//Permitir un maximo de 15 caracteres
+        {
+            //aplicamos formato nica
+            campo.value=(cedula.substr(0,3)+'-'+cedula.substr(3,6)+'-'+cedula.substr(9,4)+cedula[13].toUpperCase());
+            nica=true;
+            var hoy = new Date();
+            year=cedula.substr(7,2)*1;
+            month=cedula.substr(5,2);
+            day=cedula.substr(3,2);
+            var millennial=hoy.getFullYear()-year;
+            if(millennial>=2000)
+                year="20"+cedula.substr(7,2);
+            var fechanac = new Date(year+'-'+month+'-'+day);
+      
+            edad = hoy.getTime() - fechanac;
+            edad = Math.trunc((edad)/(1000*60*60*24*365));
+        }
     }
-}
-function filtrocedulacli(vista)
-{
-    var ruta="https://alqui.herokuapp.com/filtrocliente/"+vista+"/"+$("#cedu").val();
-    console.log($("#cedu").val());
-    var token=$("#token").val();
-    
-    $.get(ruta, function(res){
-        $('#pag').empty();
-        $("#lista").empty();//Elimina la lista actual
-        //$(".pagination").remove();
-        jQuery("#lista").append(res);//Actualiza la lista
-        
-    });
-}
-function filtrocedulaper(vista)
-{
-    var ruta="https://alqui.herokuapp.com/filtropersonal/"+vista+"/"+$("#cedu").val();
-    var token=$("#token").val();
-    $.get(ruta, function(res){
-        $("#lista").empty();//Elimina la lista actual
-        //$(".pagination").remove();
-        jQuery("#lista").append(res);//Actualiza la lista
-        $('#Datos').DataTable();
-    });
 }

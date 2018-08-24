@@ -13,11 +13,7 @@
                     </select>
                 </div>
             </div>
-            <!--<div class="col-md" >
-                <div class="form-group" >
-                    <input id="cedu" onkeypress="return cedulanica(event,this);" onkeyup="formatonica(this); filtrocedulacli('vetado.recargable.listavetadoc');" type="text" class="form-control" placeholder="Cedula del cliente" aria-label="Cedula del Cliente" aria-describedby="basic-addon2" >
-                </div>
-            </div>-->
+
         </div>
         <table class="table table-hover table-dark" cellspacing="0" id="Datos" style="width:100%;" >
             <thead >
@@ -120,18 +116,18 @@
         {
             if($("#tipofil").val()=="Cliente")
             {
-                location.href ="https://alqui.herokuapp.com/listacliente";
+                location.href ="/listacliente";
                 
             }
             else
             {
-                location.href ="https://alqui.herokuapp.com/listapersonal";
+                location.href ="/listapersonal";
             }
         }
         function vetado()
         {
             console.log("entro");
-            var ruta="https://alqui.herokuapp.com/vetar";
+            var ruta="/vetar";
             var token=$("#token").val();
             $.ajax({
                 url: ruta,
@@ -186,12 +182,10 @@
         });
         $('.delete').on( 'click', function () {
             fila=$(this).parents('tr');
-            var ruta="https://alqui.herokuapp.com/cliente/"+$(this).val()+"";
-            console.log(ruta);
+            var ruta="/cliente/"+$(this).val()+"";
             $("#descripcion").val("");
             $.get(ruta,function(res)
             {
-                console.log(res.Nombre);
                 $("#cedula").text(res.Cedula_Cliente);
                 $("#nombre").text(res.Nombre);
                 $("#apellido").text(res.Apellido);

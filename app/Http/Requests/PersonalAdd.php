@@ -27,7 +27,7 @@ class PersonalAdd extends FormRequest
             'Cedula_Personal'=>'required|unique:personal',
             'Nombre'=>'required',
             'Apellido'=>'required',
-            'Direccion'=>'required',
+            'Direccion'=>'required|max:300',
             'Fecha_Nac'=>'required'
         ];
     }

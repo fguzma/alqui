@@ -28,7 +28,12 @@
             <div class="col-md-4">
               <div class="form-group">
                   {!!Form::label('Fehca de nacimiento:')!!}
-                  {!!Form::text('Fecha_Nac',null,['id'=>'Fecha_Nac','class'=>'form-control','placeholder'=>' año/mes/dia'])!!}
+                  <div  class="input-group ">
+                    {!!Form::text('Fecha_Nac',null,['id'=>'Fecha_Nac','class'=>'form-control','placeholder'=>' año-mes-dia'])!!}
+                    <div class="input-group-append">
+                      <button class="btn btn-primary fa fa-eye" onclick="mostrarfechanac();"  type="button"></button>
+                    </div>
+                  </div>
               </div>
             </div>
             <div class="col-md-2"></div>

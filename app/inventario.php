@@ -5,7 +5,7 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class inventario extends Model
+class Inventario extends Model
 {
     protected $table='inventario';
     public $primaryKey='ID_Objeto';

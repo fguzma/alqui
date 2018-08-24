@@ -29,7 +29,6 @@ class ArticuloUpdate extends FormRequest
             'Cantidad'=>'numeric',
             'Costo_Alquiler'=>'nullable|numeric',
             'Costo_Objeto'=>'nullable|numeric',
-            'options'=>'required',
         ];
     }
 }

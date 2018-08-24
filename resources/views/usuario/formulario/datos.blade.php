@@ -5,7 +5,7 @@
             <div class="col-md-4">
               <div class="form-group">
                 {!!Form::label('Usuario:')!!}
-                {!!Form::text('Usuario',null,['autocomplete'=>'off','id'=>'usuario','class'=>'form-control','placeholder'=>'Ejemplo123','onkeyup'=>'existe("1");'])!!}
+                {!!Form::text('Usuario',null,['autocomplete'=>'off','id'=>'usuario','class'=>'form-control','placeholder'=>'Ejemplo123'])!!}
                 <spam id="msjuser" style="color:red;"></spam> 
               </div>
             </div>

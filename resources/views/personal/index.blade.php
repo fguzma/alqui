@@ -1,12 +1,7 @@
 @extends('layouts.dashboard')
 @section('content')
     <div class="d-block bg bg-dark" style="color:white; padding-top: 10px;visibility:hidden;" id="main">
-        <!--<div class="input-group mb-2 ">
-            <input id="cedu" onkeypress="return cedulanica(event,this);" onkeyup="formatonica(this); filtrocedulaper('personal.recargable.listapersonal');" type="text" class="form-control" placeholder="Cedula del cliente" aria-label="Cedula del Cliente" aria-describedby="basic-addon2" value="{!!session('valor')!!}">
-            <div class="input-group-append">
-                <button class="btn btn-dark" type="button" id="filtrar">Buscar</button>
-            </div>
-        </div>-->
+
         @include('alert.mensaje')
         <div id="mensaje"></div>
         <table class="table table-hover table-dark" cellspacing="0" id="Datos" style="width:100%;">
@@ -76,8 +71,31 @@
                                 </div>
                             </div>
                         </div> 
+                        <div class="row" >
+                            <div class="col-md-12" id="lc">
+                                <div class="list-group " id="list-tab" role="tablist" style="height:15em;width:auto; overflow:scroll;">
+                                    <table class="table table-hover table-dark" cellspacing="0" id="cargos" style="width:100%;">
+                                        <thead>
+                                            <tr>
+                                                <th class="text-center">Cargo</th>
+                                                <th data-orderable="false"></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach($Cargos as $cargo)
+                                                <tr>
+                                                    <td >{!!$cargo->Nombre_Cargo!!}</td>
+                                                    <td class="btn-primary text-center">
+                                                        <input id="{!!$cargo->ID_Cargo!!}" type="checkbox" OnClick='addcargo(this,"{!!$cargo->ID_Cargo!!}")'>
+                                                    </td>
+                                                </tr>  
+                                            @endforeach
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
 
-                        <!--@include('personal.formulario.datos')-->
                     </form>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
@@ -93,41 +111,13 @@
     {!!Html::script("https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js")!!} 
     {!!Html::script("https://cdn.datatables.net/1.10.16/js/dataTables.bootstrap4.min.js")!!} 
     {!!Html::script("js/jskevin/tiposmensajes.js")!!}  
+    {!!Html::script("js/jskevin/kavvdt.js")!!}  
     <script>
         var table;
         var fila;
         $(document).ready( function () {
-            table= $('#Datos').DataTable({
-                "pagingType": "full_numbers",//botones primero, anterio,siguiente, ultimo y numeros
-                "order": [[ 1, "asc" ]],//ordenara por defecto en la columna Nombre de forma ascendente
-                "scrollX": true,//Scroll horizontal
-                
-                "language": {//Cambio de idioma al español
-                    "lengthMenu": "Mostrar _MENU_ registros",
-                    "zeroRecords": "No se encontro ningun registro",
-                    "info": "Pagina _PAGE_ de _PAGES_",
-                    "infoEmpty": "No hay registros",
-                    "infoFiltered": "(Filtrado entre _MAX_ total registro)",
-                    "loadingRecords": "Cargando...",
-                    "processing": "Procesando...",
-                    "search": "Buscar:",
-                    "paginate": {
-                        "first": "Primera",
-                        "last": "Ultima",
-                        "next": "Siguiente",
-                        "previous": "Anterior"
-                    },
-                    "aria": {
-                        "sortAscending":  ": activar para ordenar la columna ascendente",
-                        "sortDescending": ": activar para odenar la columna descendente"
-                    },
-                    //Especificamos como interpretara los puntos decimales y los cientos
-                    "decimal": ".",
-                    "thousands": ","
-                },
-                //Definimos la cantidad de registros que se podran mostrar
-                "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "Todo"]],
-            }).search('{!!session("valor")!!}').draw();
+            table= createdt($("#Datos"),{buscar:'{!!session("valor")!!}',col:1,cant:[10,20,-1],cantT:[10,20,"todo"]})
+            createdt($("#cargos"),{col:0,dom:""});
             $("#main").css("visibility", "visible");
         });
 
@@ -141,10 +131,21 @@
             $("#direccion").val(row[3]);
             $("#Fecha_Nac").val(row[4]);
             $("#ce").val(row[0]);//Campo que almacena la cedula inicial
+            $('input[type="checkbox"]').prop('checked',false);
+            ruta="/cargopersonal/"+row[0];
+            $.get(ruta,function(res){
+                console.log(res);
+                listacargo=new Object();
+                for(i=0; i<res.length; i++)
+                {
+                    $("#"+res[i].ID_Cargo).prop("checked",true);
+                    listacargo[res[i].ID_Cargo]=res[i].ID_Cargo;
+                }
+            });
         });
         function actualizar()
         {
-            route="http://127.0.0.1:8080/personal/"+$("#ce").val();
+            route="/personal/"+$("#ce").val();
             var token=$("#token").val();
             $.ajax({
                 url: route,
@@ -165,6 +166,20 @@
                         fila.children('td.botones').children('input.delete').removeAttr( "onclick");//Eliminamos la funcion onclick del boton eliminar
                         fila.children('td.botones').children('input.delete').attr( "onclick",'erase(\''+$("#cedu").val()+'\');');//Agregamos la funcion onclick con el nuevo parametro
                         table=$("#Datos").DataTable().draw();
+                        ruta="/pcargoupdate";
+                        $.ajax({
+                            url: ruta,
+                            headers:{'X-CSRF-TOKEN': token},
+                            type: 'POST',
+                            dataType: 'json',
+                            data:{"listacargo":listacargo,"cedula":$("#cedu").val()},
+                            success: function(res){
+                                console.log("entra man");
+                            }
+                        }).fail( function( jqXHR, textStatus, errorThrown ) {
+                            message(jqXHR,{tipo:"danger"});
+                        });
+                            
                     }
                     else
                     {
@@ -181,7 +196,7 @@
         });
         function erase(cedula)
         {
-            var route="http://127.0.0.1:8080/personal/"+cedula;
+            var route="/personal/"+cedula;
             var token=$("#token").val();
             $.ajax({
                 url: route,
@@ -194,6 +209,18 @@
             }).fail( function( jqXHR, textStatus, errorThrown ) {
                 message(jqXHR,{tipo:"danger"});
             });
+        }
+        var listacargo=new Object();
+        function addcargo(elemento,key)
+        {
+            if(elemento.checked==true)
+            {
+                listacargo[key]=[key];
+            }
+            else
+            {
+                delete listacargo[key];
+            }
         }
     </script>
 @stop

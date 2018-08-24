@@ -4,7 +4,7 @@
     <h4 class="card-header">Agregar Personal</h4>
     <div class="card-body">
     <div id="mensaje"></div>
-      <form action="{{route('personal.store')}}" method="POST" id="data" >
+      <form id="data" >
 
         <input type="hidden" name="_method" value="POST">
         <input type="hidden" name="_token" value="{{ csrf_token() }}" id="token">
@@ -13,8 +13,22 @@
           <div class="col-md-6 ">
             <div class="form-group text-center">
                 {!!Form::label('Cedula','Cedula:')!!}
-                {!!Form::text('Cedula_Personal',null,['id'=>'cedu','class'=>'form-control','placeholder'=>'xxx-xxxxxx-xxxxx', 'onkeypress="return cedulanica(event,this);"','onkeyup="formatonica(this); buscar(this);"'])!!}
-          </div>
+                <div  class="input-group ">
+                  <div class="input-group-prepend">
+                    <div class="input-group-text">
+                      <input type="checkbox" id="nacional" checked>
+                      <label class="form-check-label badge badge-pill badge-info" for="defaultCheck1">
+                          Nica
+                      </label>
+                    </div>
+                  </div>
+                  {!!Form::text('Cedula_Personal',null,['class'=>'form-control','placeholder'=>'xxx-xxxxxx-xxxxx', 'autocomplete'=>'off', 'onkeypress'=>'return CharCedula(event,this);', 'onkeyup'=>'formatonica(this)','id'=>'cedu'])!!}  
+                  <div class="input-group-append">
+                    <button class="btn btn-primary fa fa-search" onclick="buscar();"  type="button"></button>
+                    <button class="btn btn-primary fa fa-eraser" onclick="limpiar();"  type="button"></button>
+                  </div>
+                </div>
+            </div>
           </div>
         </div>
         @include('personal.formulario.datos')
@@ -23,10 +37,11 @@
           <div class="col-md-2"></div>
           <div class="col-md-8" id="lc">
             <div class="list-group " id="list-tab" role="tablist" style="height:15em;width:auto; overflow:scroll;border-radius: 40px;">
-              <table class="table table-hover table-dark">
+              <table class="table table-hover table-dark" cellspacing="0" id="cargos" style="width:100%;">
                 <thead>
                   <tr>
                     <th class="text-center">Cargo</th>
+                    <th data-orderable="false"></th>
                   </tr>
                 </thead>
                 <tbody>
@@ -57,51 +72,39 @@
 @section("script")
   {!!Html::script("js/jskevin/cedulanica.js")!!} 
   {!!Html::script("js/jskevin/tiposmensajes.js")!!} 
+  {!!Html::script("https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js")!!} 
+  {!!Html::script("https://cdn.datatables.net/1.10.16/js/dataTables.bootstrap4.min.js")!!} 
+  {!!Html::script("js/jskevin/kavvdt.js")!!}  
   <script>
     var listacargo=new Object();
-    var autocompletado=false;
-    var repetir=false;
-    function buscar(cedula)
+    campocedula=$("#cedu");
+    $(document).ready(function(){
+      createdt($("#cargos"),{col:0,dom:""});
+    });
+    function buscar()
     {
-      var ruta="http://127.0.0.1:8080/personal/"+cedula.value;
-      var token=$("#token").val();
-      autocompletado=false;
-        $.ajax({
-            url: ruta,
-            headers:{'X-CSRF-TOKEN': token},
-            type: 'GET',
-            dataType: 'json',
-            success: function(){
-                autocompletado=true;
-                alert("El Personal ya esta registrado, no sera posible agregarlo");
-                $("#Agregar").prop('disabled',true);
-                autocompletar(cedula.value);
-            }
-        });
-        if(autocompletado==false)
-        {
-          if(repetir==true)
+      cedula=0;
+      if($("#cedu").length>0)
+      {
+        cedula=campocedula.val();
+        var ruta="/personal/"+cedula;
+        $.get(ruta,function(res){
+          if(res)
           {
-            $("#Nombre").val("");
-            $("#Apellido").val("");
-            $("#Direccion").val("");
-            $("#Fecha_Nac").val("");
-            $("#Agregar").prop('disabled',false);
-            repetir=false;
-          }
-        }
-    }
-    function autocompletar(cedula)
-    {
-      var ruta="http://127.0.0.1:8080/personal/"+cedula;
-      $.get(ruta, function(res){
             $("#Nombre").val(res.Nombre);
             $("#Apellido").val(res.Apellido);
             $("#Direccion").val(res.Direccion);
             $("#Fecha_Nac").val(res.Fecha_Nac);
+            message(['El personal ya existe, no podra ser registrado!'],{objeto:$("#mensaje"),tipo:"danger",manual:true});
+          }
+          else
+          {
+            message(['Cedula no registrada, se puede registrar!'],{objeto:$("#mensaje"),tipo:"success",manual:true});
+          }
         });
-      repetir=true;
+      }
     }
+
     //agregamos o eliminamos en la lista cargo
     function addcargo(elemento,cargo,key)
     {
@@ -114,11 +117,11 @@
         delete listacargo[key];
       }
     }
+
     function guardar(decision)
     {
-      var ruta = "http://127.0.0.1:8080/personal";
+      var ruta = "/personal";
       var token = $("#token").val();
-      console.log($("#data").serialize());
       //Consulta para añadir el nuevo personal
       $.ajax({
         url: ruta,
@@ -127,7 +130,7 @@
         dataType: 'json',
         data:$("#data").serialize(),
         success: function(res){
-          ruta="http://127.0.0.1:8080/personalcargo";
+          ruta="/personalcargo";
           //Consulta para agregar los cargos que se han predefinido del personal
           $.ajax({
             url:ruta,
@@ -137,23 +140,20 @@
             data: {'listacargo':listacargo,'cedula':$("#cedu").val()},
             success: function(res)
             {
-              console.log("cargo agregado");
             }
           }).fail( function( jqXHR, textStatus, errorThrown ) {
             message(jqXHR,{tipo:"danger"});
           });
+          
           if(decision=='guardarv')//si desea guardar y ver el personal recien agregado
-            location.href="http://127.0.0.1:8080/personalv/"+"1"+"/"+$("#cedu").val();
+            location.href="/personalv/"+"1"+"/"+$("#cedu").val();
           if(decision=='guardar')//Si desea guardar e ingresar uno mas
           {
             message(["Se agrego el personal correctamente "],{manual:true})
             limpiar();
           }
-          console.log("se agrego");
-          return;
         }
       }).fail( function( jqXHR, textStatus, errorThrown ) {
-        console.log("error");
         message(jqXHR,{tipo:"danger"});
       });
     }
@@ -166,10 +166,14 @@
       $("#Fecha_Nac").val("");
       for(var elemento in listacargo)
       {
-        console.log(elemento);
         $("#"+elemento).prop('checked',false);
       }
       listacargo=new Object();
+    }
+    function mostrarfechanac()
+    {
+      if(year>0 && month>0 && day>0)
+        $("#Fecha_Nac").val(year+"-"+month+"-"+day);
     }
   </script>  
 @stop

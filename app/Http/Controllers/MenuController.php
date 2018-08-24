@@ -6,12 +6,24 @@ use Illuminate\Http\Request;
 use App\Menu;
 use App\Http\Requests\MenuAdd;
 use App\Http\Requests\MenuUpdate;
+use Session;
 
 class MenuController extends Controller
 {
-    public function index()
+    
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+    public function index($msj=null,$nombre="")
     {
         $menu=Menu::all();
+        if($msj=="1")
+        {
+            session::flash('message','Comida agregada exitosamente');
+            session::flash('tipo','info');
+        }
+        Session::flash('valor',$nombre);
         return view('menu.index',compact('menu'));
     }
     public function create()
@@ -73,9 +85,7 @@ class MenuController extends Controller
             $comida->save();
             return 1;
         }
-/*         $comida["costo"]=$request['costo'];
-        $comida["descripcion"]=$request['descripcion'];
-        $comida["path"]=$request['path']; */
+
     }
     public function destroy($id)
     {
