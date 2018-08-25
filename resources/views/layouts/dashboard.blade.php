@@ -169,7 +169,7 @@
             </a>
             <ul class="sidenav-second-level collapse" id="collapseReservacion">
               <li href="">
-                {!!link_to_route('reservacion.index', $title = 'reservacion')!!}
+                {!!link_to_route('reservacion.index', $title = 'Reservacion')!!}
               </li>
               <li href="">
                 {!!link_to_route('reserva.index', $title = 'Ver reservacion')!!}
