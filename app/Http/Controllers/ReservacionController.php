@@ -33,7 +33,7 @@ class ReservacionController extends Controller
         $cliente=null;
         if($cedula!=null)
             $cliente=Cliente::find($cedula);
-        return view('Reservacion.index',compact('servicios','cliente','menu'));
+        return view('reservacion.index',compact('servicios','cliente','menu'));
     }
     //Guarda la reservacion o genera el pdf de la factura
     public function store(AddReserva $request)
@@ -107,7 +107,7 @@ class ReservacionController extends Controller
                 $i++;
             }
             array_push($Arreglo,$fila);//agregamos la ultima fila que posee 3 elementos
-            $pdf=PDF::loadView('Reservacion.fac', compact('CC', 'NC', 'DL','FI', 'FF','Arreglo','facactual'));//cargamos la vista
+            $pdf=PDF::loadView('reservacion.fac', compact('CC', 'NC', 'DL','FI', 'FF','Arreglo','facactual'));//cargamos la vista
             $now = new \DateTime();
             return $pdf->stream('factura'.$now->format('Y-m-d_H_i_s').'.pdf');//definimos el nombre por defecto del archivo
         }

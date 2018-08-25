@@ -208,19 +208,19 @@ class ReservasController extends Controller
         if($tipof=="CC" && $valor!="no")
         {
             $reservas=Reservacion::where('Cedula_Cliente','like',$valor.'%')->get();
-            return view('Reservacion.recargable.listareservas',compact('reservas'));
+            return view('reservacion.recargable.listareservas',compact('reservas'));
         }
         if($tipof=="NC" && $valor!="no")
         {
             $reservas=Reservacion::where('Nombre_Contacto','like',$valor.'%')->get();
-            return view('Reservacion.recargable.listareservas',compact('reservas'));
+            return view('reservacion.recargable.listareservas',compact('reservas'));
         }
         if($tipof=="fechafac" && $valor!="no")
         {
             $reservas=Reservacion::whereBetween('created_at',['2017-10-21','2017-12-21'])->get();
-            return view('Reservacion.recargable.listareservas',compact('reservas'));
+            return view('reservacion.recargable.listareservas',compact('reservas'));
         }
         $reservas=Reservacion::all();
-        return view('Reservacion.recargable.listareservas',compact('reservas'));
+        return view('reservacion.recargable.listareservas',compact('reservas'));
     }
 }

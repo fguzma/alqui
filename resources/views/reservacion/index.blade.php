@@ -320,12 +320,12 @@
               <div id="menuparte1" class="carousel-item active">
                 <div class="row" style="height:50em">
                   <div id="menuLista" class="col-md-12" style="overflow-y:scroll;">
-                    @include('Reservacion.menu.menu')
+                    @include('reservacion.menu.menu')
                   </div>
                 </div>
               </div>
               <div id="menuparte2" class="carousel-item">
-                @include('Reservacion.menu.añadir')
+                @include('reservacion.menu.añadir')
               </div>
             </div>
           </div>
